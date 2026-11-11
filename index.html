@@ -54,7 +54,19 @@ button{font:inherit;color:inherit}
   padding:0 12px;color:var(--ink);background:none;border:0;text-align:left;cursor:pointer;justify-self:start;border-radius:var(--r-sm)}
 #toc{display:grid;gap:clamp(12px,2vh,20px)}
 .grp{display:grid;gap:4px}
-.grp-label{font-size:calc(var(--t-ui) * .74);font-weight:600;color:var(--muted);padding:0 12px 4px}
+/* 가장 큰 목록: 남자 / 여자. 눌러서 접고 편다 */
+.grp-btn{width:100%;min-height:clamp(44px,5.6vh,54px);display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:4px 12px;border:0;border-bottom:1px solid var(--rule);border-radius:0;background:transparent;cursor:pointer;text-align:left;
+  font-size:var(--t-ui);font-weight:700;color:var(--muted);letter-spacing:.02em;
+  transition:color var(--m-out) var(--ease)}
+.grp-btn svg{width:1em;height:1em;flex:none;transition:transform 200ms var(--ease)}
+.grp.open>.grp-btn{color:var(--ink)}
+.grp.open>.grp-btn svg{transform:rotate(90deg)}
+.grp-wrap{display:grid;grid-template-rows:0fr;transition:grid-template-rows 220ms var(--ease)}
+.grp.open>.grp-wrap{grid-template-rows:1fr}
+.grp-wrap>.toc{min-height:0;overflow:hidden;visibility:hidden;transition:visibility 0s 220ms}
+.grp.open>.grp-wrap>.toc{visibility:visible;transition-delay:0s;padding-top:4px}
+.grp.solo>.grp-btn{display:none}
 .toc,.subs{list-style:none;margin:0;padding:0;display:grid;gap:4px}
 /* 큰 목록: 스타일 이름 + 펼침 화살표 */
 .sty-btn{width:100%;min-height:clamp(52px,6.8vh,66px);display:flex;align-items:center;justify-content:space-between;gap:12px;
@@ -80,6 +92,7 @@ button{font:inherit;color:inherit}
 .subs button[aria-current="true"]>span::before{transform:none}
 .subs button[aria-current="true"] small{color:var(--accent)}
 @media (hover:hover) and (pointer:fine){
+  .grp-btn:hover{color:var(--ink)}
   .sty-btn:hover,.subs button:hover{color:var(--ink);background:color-mix(in srgb,var(--ink) 6%,transparent);transition-duration:var(--m-in)}
   .subs button[aria-current="true"]:hover{background:var(--bg)}
 }
@@ -160,7 +173,12 @@ h2,h1{font-family:var(--display);font-weight:700;font-size:var(--t-title);line-h
 @media (max-width:640px){
   body{grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr)}
   .side{border-right:0;border-bottom:1px solid var(--rule);overflow-x:auto;overflow-y:hidden;padding-block:8px;padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;align-items:center;gap:8px}
-  .brand,.grp-label{display:none}
+  .brand{display:none}
+  .grp-btn{width:auto;white-space:nowrap;min-height:44px;padding-inline:14px;border:1.5px solid var(--rule);border-radius:var(--r-sm)}
+  .grp.open>.grp-btn{border-color:var(--ink)}
+  .grp-wrap{display:none}
+  .grp.open>.grp-wrap{display:block}
+  .grp-wrap>.toc,.grp.open>.grp-wrap>.toc{padding:0;overflow:visible;visibility:visible}
   /* 폰: 한 줄에 스타일 이름이 늘어서고, 펼친 스타일 옆에 단원이 이어진다 */
   #toc,.grp,.toc,.sty,.subs{display:flex;gap:4px;align-items:center}
   .sub-wrap{display:none}
@@ -2792,10 +2810,12 @@ h2,h1{font-family:var(--display);font-weight:700;font-size:var(--t-title);line-h
     if(sfirst[s]==null)sfirst[s]=i;if(first[key]==null)first[key]=i;total[key]=(total[key]||0)+1;c.dataset.k=total[key]});
   var chev='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>';
   // 목록 만들기: 남자/여자 묶음 > 스타일 > 단원
-  var groups={},order=[];
+  var groups={},gbox={},order=[];
   STYLES.forEach(function(s){if(sfirst[s.id]==null)return;
     if(!groups[s.group]){var g=document.createElement('div');g.className='grp';
-      g.innerHTML='<p class="grp-label">'+s.group+'</p><ul class="toc"></ul>';toc.appendChild(g);groups[s.group]=g.lastChild;order.push(s.group)}
+      g.innerHTML='<button class="grp-btn" type="button" aria-expanded="false"><span>'+s.group+'</span>'+chev+'</button><div class="grp-wrap"><ul class="toc"></ul></div>';
+      toc.appendChild(g);groups[s.group]=g.querySelector('.toc');gbox[s.group]=g;order.push(s.group);
+      (function(g){g.firstChild.addEventListener('click',function(){openGroup(g,!g.classList.contains('open'))})})(g)}
     var li=document.createElement('li');li.className='sty';
     var b=document.createElement('button');b.type='button';b.className='sty-btn';b.setAttribute('aria-expanded','false');
     b.innerHTML='<span>'+s.name+'</span>'+chev;
@@ -2804,17 +2824,18 @@ h2,h1{font-family:var(--display);font-weight:700;font-size:var(--t-title);line-h
     s.chapters.forEach(function(ch){var key=s.id+':'+ch.id;if(first[key]==null||ch.id==='start')return;
       var sl=document.createElement('li'),sb=document.createElement('button');sb.type='button';
       sb.innerHTML='<span>'+ch.name+'</span>'+(total[key]>1?'<small>'+total[key]+'장</small>':'');
-      sb.addEventListener('click',function(){go(first[key])});sl.appendChild(sb);ul.appendChild(sl);btns[key]=sb});
+      sb.addEventListener('click',function(){go(first[key],true)});sl.appendChild(sb);ul.appendChild(sl);btns[key]=sb});
     wrap.appendChild(ul);li.appendChild(b);li.appendChild(wrap);groups[s.group].appendChild(li);items[s.id]=li;
     // 큰 목록을 누르면: 닫혀 있으면 펼치고 그 스타일 첫 장으로, 지금 보는 스타일이 펼쳐져 있으면 접기
     b.addEventListener('click',function(){
       if(li.classList.contains('open')&&curStyle===s.id)open(null);
-      else{open(s.id);if(curStyle!==s.id)go(sfirst[s.id])}});
+      else{open(s.id);if(curStyle!==s.id)go(sfirst[s.id],true)}});
   });
-  if(order.length<2)[].forEach.call(toc.querySelectorAll('.grp-label'),function(p){p.remove()});
+  if(order.length<2)order.forEach(function(k){gbox[k].classList.add('solo');openGroup(gbox[k],true)});
+  function openGroup(g,on){g.classList.toggle('open',on);g.firstChild.setAttribute('aria-expanded',on?'true':'false')}
   function open(id){Object.keys(items).forEach(function(x){var on=x===id;items[x].classList.toggle('open',on);
     items[x].firstChild.setAttribute('aria-expanded',on?'true':'false')})}
-  document.getElementById('home').addEventListener('click',function(){go(0)});
+  document.getElementById('home').addEventListener('click',function(){go(0,true)});
   // 순서가 있는 단원은 제목 앞에 큰 번호
   cards.forEach(function(c){
     var ch=chap[c.dataset.key]||{},h2=c.querySelector('h2');if(!h2)return;
@@ -2842,7 +2863,8 @@ h2,h1{font-family:var(--display);font-weight:700;font-size:var(--t-title);line-h
     where.textContent=sty[s].name+(c.dataset.ch==='start'?'':' · '+ch.name+(t>1?' '+k+' / '+t:''));
     var h='';if(t>1)for(var j=1;j<=t;j++)h+='<i'+(j<=k?' class="on"':'')+'></i>';segs.innerHTML=h;
     prev.disabled=i===0;next.disabled=i===n-1;
-    if(s!==curStyle){curStyle=s;open(s)}
+    // 스타일이 바뀌면 그 스타일과, 그 스타일이 든 남자/여자 묶음을 편다(다른 묶음은 사용자가 연 그대로 둔다)
+    if(s!==curStyle){curStyle=s;open(s);if(gbox[sty[s].group])openGroup(gbox[sty[s].group],true)}
     Object.keys(btns).forEach(function(x){btns[x].setAttribute('aria-current',x===key?'true':'false')});
     // 목록이 지금 위치를 따라간다(폰은 가로, 태블릿은 세로)
     var b=btns[key]||items[s].firstChild;
