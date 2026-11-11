@@ -1,7 +1,7 @@
 """staging/<id>.html + <id>.json 을 index.html 에 합친다. 순서는 ORDER. 다시 돌려도 같은 결과."""
 import json, pathlib, sys
 root = pathlib.Path(sys.argv[1])
-ORDER = ['gail', 'drop', 'ase', 'dandy', 'hush', 'bob']
+ORDER = ['gail', 'drop', 'ase', 'dandy', 'crop', 'ivy', 'regent', 'pomade', 'shadow', 'hush', 'bob', 'longlayer', 'tassel', 'hime', 'seethru', 'hippie', 'build', 'wave', 'magic']
 idx = root / 'index.html'
 s = idx.read_text(encoding='utf-8')
 html, metas = [], []
