@@ -3,23 +3,21 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>리프컷 손질 카드</title>
-<meta name="description" content="리프컷 커트, 펌, 드라이, 마무리를 한 장씩 넘겨 보는 손질 카드">
-<meta property="og:title" content="리프컷 손질 카드">
-<meta property="og:description" content="커트 9장, 드라이 7장. 사진과 한 줄 설명으로 넘겨 보세요.">
+<title>헤어 손질 카드</title>
+<meta name="description" content="리프컷, 가일컷, 드롭컷, 애즈펌, 시스루 댄디컷, 허쉬컷, C컬 단발펌의 커트·펌·드라이 순서를 한 장씩 넘겨 보는 손질 카드">
+<meta property="og:title" content="헤어 손질 카드">
+<meta property="og:description" content="스타일 7가지의 커트·펌·드라이 순서. 사진과 한 줄 설명으로 넘겨 보세요.">
 <meta property="og:image" content="https://kuyh2185.github.io/leafcut/img/hero.jpg">
 <meta property="og:type" content="website">
 <meta name="theme-color" content="#ffffff">
 <meta name="color-scheme" content="light">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@500;600&display=swap">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <style>
 /* taste 스킬 기준으로 다시 손봄 (2026-11-11)
    색: Navy on white(흰 바탕, 남색 글씨, 따뜻한 회색 면) + 강조색 하나 = 사인볼 빨강.
        빨강은 지금 위치, 단계 번호, 진행 막대, 다음 버튼, 포커스 테두리에만.
-   글꼴: 제목 Hahmlet, 본문 Pretendard. 굵기 대신 크기와 좁은 자간으로 제목을 세운다.
+   글꼴: 평범한 문서체로 Pretendard 하나만 쓴다(제목은 굵기로만 구분).
+   목록: 스타일 이름(큰 목록)을 누르면 그 스타일의 단원(작은 목록)이 펼쳐진다.
    움직임: 버튼은 마우스를 올리면 1px 올라가고 누르면 1px 눌림(150/120/90ms), 표지는 처음 한 번만 등장.
    카드 형식(왼쪽 목록, 옆으로 넘기기, 사진 아래 한 줄 설명)은 그대로 둔다. */
 :root{
@@ -29,7 +27,7 @@
   --r-sm:8px; --r-md:12px; --r-lg:20px;
   --ease:cubic-bezier(.2,.8,.2,1); --ease-enter:cubic-bezier(.22,1,.36,1);
   --m-in:150ms; --m-out:120ms; --m-press:90ms;
-  --display:"Hahmlet","Pretendard Variable",serif;
+  --display:"Pretendard Variable","Pretendard","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
   --body:"Pretendard Variable","Pretendard","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
   --t-title:clamp(30px, 1.8vw + 2.4vh, 60px);
   --t-desc:clamp(20px, 1.2vw + 1.6vh, 34px);
@@ -52,23 +50,38 @@ button{font:inherit;color:inherit}
 .side{background:var(--surface);border-right:1px solid var(--rule);min-height:0;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--rule) transparent;
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:16px;padding-block:clamp(24px,3.4vh,48px) max(24px,env(safe-area-inset-bottom,0px));
   display:grid;align-content:start;gap:clamp(16px,3vh,32px)}
-.brand{font-family:var(--display);font-weight:600;font-size:clamp(30px,1.5vw + 1.6vh,44px);line-height:1.1;letter-spacing:-.03em;
+.brand{font-family:var(--display);font-weight:700;font-size:clamp(22px,1vw + 1.2vh,30px);line-height:1.2;letter-spacing:-.01em;
   padding:0 12px;color:var(--ink);background:none;border:0;text-align:left;cursor:pointer;justify-self:start;border-radius:var(--r-sm)}
-.toc{list-style:none;margin:0;padding:0;display:grid;gap:4px}
-.toc button{position:relative;width:100%;min-height:clamp(48px,6.4vh,62px);display:flex;align-items:center;justify-content:space-between;gap:12px;
+#toc{display:grid;gap:clamp(12px,2vh,20px)}
+.grp{display:grid;gap:4px}
+.grp-label{font-size:calc(var(--t-ui) * .74);font-weight:600;color:var(--muted);padding:0 12px 4px}
+.toc,.subs{list-style:none;margin:0;padding:0;display:grid;gap:4px}
+/* 큰 목록: 스타일 이름 + 펼침 화살표 */
+.sty-btn{width:100%;min-height:clamp(52px,6.8vh,66px);display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:4px 12px 4px 16px;border:0;border-radius:var(--r-sm);background:transparent;cursor:pointer;text-align:left;
+  font-size:calc(var(--t-ui) * 1.08);font-weight:700;color:var(--ink);
+  transition:background-color var(--m-out) var(--ease)}
+.sty-btn svg{width:1em;height:1em;flex:none;color:var(--muted);transition:transform 200ms var(--ease)}
+.sty.open>.sty-btn svg{transform:rotate(90deg);color:var(--accent)}
+/* 작은 목록: 접혔다 펼쳐진다 */
+.sub-wrap{display:grid;grid-template-rows:0fr;transition:grid-template-rows 220ms var(--ease)}
+.sty.open>.sub-wrap{grid-template-rows:1fr}
+.sub-wrap>.subs{min-height:0;overflow:hidden;padding-left:12px;visibility:hidden;transition:visibility 0s 220ms}
+.sty.open>.sub-wrap>.subs{visibility:visible;transition-delay:0s;padding-bottom:8px}
+.subs button{position:relative;width:100%;min-height:clamp(46px,6vh,58px);display:flex;align-items:center;justify-content:space-between;gap:12px;
   padding:4px 12px 4px 16px;border:0;border-radius:var(--r-sm);background:transparent;cursor:pointer;text-align:left;
   font-size:var(--t-ui);font-weight:500;color:var(--muted);
   transition:background-color var(--m-out) var(--ease),color var(--m-out) var(--ease)}
-.toc button small{font-size:.78em;font-weight:500;color:var(--muted);font-variant-numeric:tabular-nums}
+.subs button small{font-size:.78em;font-weight:500;color:var(--muted);font-variant-numeric:tabular-nums}
 /* 지금 단원: 흰 칸 + 이름 앞 작은 빨간 점 (자리는 늘 잡아 두어 글자가 움직이지 않게) */
-.toc button>span::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:10px;vertical-align:.18em;
+.subs button>span::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:10px;vertical-align:.18em;
   background:var(--accent);transform:scale(0);transition:transform var(--m-out) var(--ease)}
-.toc button[aria-current="true"]{background:var(--bg);color:var(--ink);font-weight:700;box-shadow:inset 0 0 0 1px var(--rule)}
-.toc button[aria-current="true"]>span::before{transform:none}
-.toc button[aria-current="true"] small{color:var(--accent)}
+.subs button[aria-current="true"]{background:var(--bg);color:var(--ink);font-weight:700;box-shadow:inset 0 0 0 1px var(--rule)}
+.subs button[aria-current="true"]>span::before{transform:none}
+.subs button[aria-current="true"] small{color:var(--accent)}
 @media (hover:hover) and (pointer:fine){
-  .toc button:hover{color:var(--ink);background:color-mix(in srgb,var(--ink) 6%,transparent);transition-duration:var(--m-in)}
-  .toc button[aria-current="true"]:hover{background:var(--bg)}
+  .sty-btn:hover,.subs button:hover{color:var(--ink);background:color-mix(in srgb,var(--ink) 6%,transparent);transition-duration:var(--m-in)}
+  .subs button[aria-current="true"]:hover{background:var(--bg)}
 }
 
 /* 오른쪽 카드: 왼쪽·오른쪽 여백을 같게 */
@@ -80,8 +93,8 @@ button{font:inherit;color:inherit}
   display:grid;grid-template-rows:auto minmax(0,1fr) auto;justify-items:center;text-align:center;
   gap:clamp(20px,3.4vh,40px);padding-block:clamp(24px,3.6vh,48px) clamp(12px,2vh,24px)}
 .title{display:flex;align-items:baseline;justify-content:center;gap:clamp(12px,1.2vw,16px);min-width:0;max-width:100%}
-.num{font-family:var(--display);font-weight:600;font-size:calc(var(--t-title) * 1.15);line-height:1;letter-spacing:-.04em;color:var(--accent);font-variant-numeric:tabular-nums;flex:none}
-h2,h1{font-family:var(--display);font-weight:500;font-size:var(--t-title);line-height:1.22;letter-spacing:-.035em;text-wrap:balance;min-width:0}
+.num{font-family:var(--display);font-weight:700;font-size:calc(var(--t-title) * 1.1);line-height:1;letter-spacing:-.01em;color:var(--accent);font-variant-numeric:tabular-nums;flex:none}
+h2,h1{font-family:var(--display);font-weight:700;font-size:var(--t-title);line-height:1.25;letter-spacing:-.015em;text-wrap:balance;min-width:0}
 .desc{width:100%;white-space:nowrap;font-size:var(--t-desc);line-height:1.45;font-weight:400;color:var(--ink);letter-spacing:-.01em}
 .desc strong{font-weight:700}
 .media{width:100%;min-height:0;min-width:0;display:grid;gap:clamp(12px,1.4vw,24px);justify-items:center}
@@ -101,11 +114,11 @@ h2,h1{font-family:var(--display);font-weight:500;font-size:var(--t-title);line-h
 .rows>div{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.4fr);gap:8px 24px;align-items:baseline;
   padding-block:clamp(16px,2.6vh,32px);border-bottom:1px solid var(--rule)}
 .rows b{font-size:var(--t-desc);font-weight:500;color:var(--muted)}
-.rows span{font-family:var(--display);font-weight:500;font-size:calc(var(--t-desc) * 1.1);line-height:1.35;letter-spacing:-.03em}
+.rows span{font-family:var(--display);font-weight:600;font-size:calc(var(--t-desc) * 1.05);line-height:1.4;letter-spacing:-.01em}
 .rows small{grid-column:2;font-size:calc(var(--t-desc) * .8);color:var(--muted);font-weight:400}
 
 /* 표지 */
-.cover h1{font-size:clamp(60px,4vw + 5vh,124px);line-height:1;letter-spacing:-.05em;font-weight:600}
+.cover h2{font-size:clamp(48px,3vw + 4vh,96px);line-height:1.1;letter-spacing:-.02em;font-weight:700}
 .credit{font-size:15px;color:var(--muted);white-space:normal}
 
 /* 넘김 막대 */
@@ -134,7 +147,7 @@ h2,h1{font-family:var(--display);font-weight:500;font-size:var(--t-title);line-h
 
 /* 표지 등장: 처음 열 때 한 번만. 제목이 올라오고, 사진이 1.05에서 제자리로, 설명이 뒤따른다. */
 .enter .cover .media>div{overflow:hidden;border-radius:var(--r-lg)}
-.enter .cover h1{animation:rise 700ms var(--ease-enter) both}
+.enter .cover h2{animation:rise 700ms var(--ease-enter) both}
 .enter .cover .media img{animation:settle 1100ms var(--ease-enter) both}
 .enter .cover .desc{animation:fadeup 520ms var(--ease-enter) 350ms both}
 @keyframes rise{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
@@ -147,12 +160,18 @@ h2,h1{font-family:var(--display);font-weight:500;font-size:var(--t-title);line-h
 @media (max-width:640px){
   body{grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr)}
   .side{border-right:0;border-bottom:1px solid var(--rule);overflow-x:auto;overflow-y:hidden;padding-block:8px;padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;align-items:center;gap:8px}
-  .brand{display:none}
-  .toc{display:flex;gap:4px}
-  .toc button{white-space:nowrap;min-height:44px;width:auto;padding-inline:14px}
-  .toc button>span::before{display:none}
-  .toc button[aria-current="true"]>span::before{display:inline-block;margin-right:6px;width:7px;height:7px}
-  .toc button small{display:none}
+  .brand,.grp-label{display:none}
+  /* 폰: 한 줄에 스타일 이름이 늘어서고, 펼친 스타일 옆에 단원이 이어진다 */
+  #toc,.grp,.toc,.sty,.subs{display:flex;gap:4px;align-items:center}
+  .sub-wrap{display:none}
+  .sty.open>.sub-wrap{display:block}
+  .sub-wrap>.subs,.sty.open>.sub-wrap>.subs{padding:0;overflow:visible}
+  .sty-btn,.subs button{white-space:nowrap;min-height:44px;width:auto;padding-inline:14px}
+  .sty-btn svg{display:none}
+  .sty.open>.sty-btn{background:var(--ink);color:var(--bg)}
+  .subs button>span::before{display:none}
+  .subs button[aria-current="true"]>span::before{display:inline-block;margin-right:6px;width:7px;height:7px}
+  .subs button small{display:none}
   .pane{--edge:16px;padding-left:max(16px,env(safe-area-inset-left,0px))}
   .bar button{min-width:0;padding-inline:16px}
   .rows>div{grid-template-columns:1fr}
@@ -162,37 +181,37 @@ h2,h1{font-family:var(--display);font-weight:500;font-size:var(--t-title);line-h
 </head>
 <body>
 
-<nav class="side" aria-label="단원 목록">
-  <button class="brand" type="button" id="home">리프컷</button>
-  <ul class="toc" id="toc"></ul>
+<nav class="side" aria-label="스타일과 단원 목록">
+  <button class="brand" type="button" id="home">헤어 손질 카드</button>
+  <div id="toc"></div>
 </nav>
 
 <div class="pane">
 <main class="deck" id="deck">
 
-<section class="card cover" data-ch="start">
-  <h1>리프컷</h1>
+<section data-style="leaf" class="card cover" data-ch="start">
+  <h2>리프컷</h2>
   <div class="media"><div><img src="img/hero.jpg" alt="세미 리프컷 완성 모습"></div></div>
   <p class="desc">왼쪽에서 단원을 누르거나, 옆으로 넘기세요</p>
 </section>
 
-<section class="card" data-ch="key">
+<section data-style="leaf" class="card" data-ch="key">
   <h2>옆머리가 S자로 흐른다</h2>
-  <div class="media"><div><img src="img/s.jpg" alt="앞머리가 S자로 흐르는 모습"></div></div>
+  <div class="media"><div><img loading="lazy" src="img/s.jpg" alt="앞머리가 S자로 흐르는 모습"></div></div>
   <p class="desc">앞머리가 <strong>광대 쪽으로</strong> 흘러내립니다</p>
 </section>
-<section class="card" data-ch="key">
+<section data-style="leaf" class="card" data-ch="key">
   <h2>윗머리는 납작하게</h2>
-  <div class="media"><div><img src="img/flat.jpg" alt="윗머리가 납작한 리프컷 완성 마네킹"></div></div>
+  <div class="media"><div><img loading="lazy" src="img/flat.jpg" alt="윗머리가 납작한 리프컷 완성 마네킹"></div></div>
   <p class="desc">층은 적게, <strong>숱으로 가볍게</strong></p>
 </section>
-<section class="card" data-ch="key">
+<section data-style="leaf" class="card" data-ch="key">
   <h2>뒷머리는 목에 감기게</h2>
-  <div class="media"><div><img src="img/nape.jpg" alt="목선을 따라 감긴 뒷머리"></div></div>
+  <div class="media"><div><img loading="lazy" src="img/nape.jpg" alt="목선을 따라 감긴 뒷머리"></div></div>
   <p class="desc">옆·뒤는 붙이고, 끝은 <strong>목선 따라 안으로</strong></p>
 </section>
 
-<section class="card" data-ch="len">
+<section data-style="leaf" class="card" data-ch="len">
   <h2>부위별 길이</h2>
   <div class="rows">
     <div><b>앞머리</b><span>코끝 ~ 인중 사이</span></div>
@@ -203,58 +222,58 @@ h2,h1{font-family:var(--display);font-weight:500;font-size:var(--t-title);line-h
   <span></span>
 </section>
 
-<section class="card" data-ch="cut">
+<section data-style="leaf" class="card" data-ch="cut">
   <h2>귀 높이로 위아래 나누기</h2>
-  <div class="media"><div><img src="img/cut1.jpg" alt="귀 기준으로 머리를 위아래로 나누는 장면"></div></div>
+  <div class="media"><div><img loading="lazy" src="img/cut1.jpg" alt="귀 기준으로 머리를 위아래로 나누는 장면"></div></div>
   <p class="desc"><strong>아래쪽(목 뒤)부터</strong> 자르고 위로 올라갑니다</p>
 </section>
-<section class="card" data-ch="cut">
+<section data-style="leaf" class="card" data-ch="cut">
   <h2>뒷머리는 옷깃 선까지</h2>
-  <div class="media two"><div><img src="img/cut2a.jpg" alt="옷깃을 기준으로 뒷머리 길이를 설명하는 장면"></div><div><img src="img/cut2b.jpg" alt="목선을 따라 뒷머리를 자르는 장면"></div></div>
+  <div class="media two"><div><img loading="lazy" src="img/cut2a.jpg" alt="옷깃을 기준으로 뒷머리 길이를 설명하는 장면"></div><div><img loading="lazy" src="img/cut2b.jpg" alt="목선을 따라 뒷머리를 자르는 장면"></div></div>
   <p class="desc">일자로 맞춘 뒤 <strong>목선 따라 둥글게</strong></p>
 </section>
-<section class="card" data-ch="cut">
+<section data-style="leaf" class="card" data-ch="cut">
   <h2>아래는 가로로 떠서 90도</h2>
-  <div class="media"><div><img src="img/cut3.jpg" alt="가로로 뜬 머리를 두상과 90도로 들어 자르는 장면"></div></div>
+  <div class="media"><div><img loading="lazy" src="img/cut3.jpg" alt="가로로 뜬 머리를 두상과 90도로 들어 자르는 장면"></div></div>
   <p class="desc">두상과 <strong>직각으로</strong> 들어 층을 냅니다</p>
 </section>
-<section class="card" data-ch="cut">
+<section data-style="leaf" class="card" data-ch="cut">
   <h2>귀 옆 아래는 투블럭</h2>
-  <div class="media"><div><img src="img/cut4.jpg" alt="바리깡으로 귀 옆 아래를 미는 장면"></div></div>
+  <div class="media"><div><img loading="lazy" src="img/cut4.jpg" alt="바리깡으로 귀 옆 아래를 미는 장면"></div></div>
   <p class="desc"><strong>20~25mm</strong>로 밀고, 구레나룻은 살립니다</p>
 </section>
-<section class="card" data-ch="cut">
+<section data-style="leaf" class="card" data-ch="cut">
   <h2>앞머리는 코끝~인중</h2>
-  <div class="media"><div><img src="img/cut5.jpg" alt="앞머리 길이를 코끝과 인중 사이로 정하는 장면"></div></div>
+  <div class="media"><div><img loading="lazy" src="img/cut5.jpg" alt="앞머리 길이를 코끝과 인중 사이로 정하는 장면"></div></div>
   <p class="desc">윗머리를 앞으로 내려 <strong>앞머리부터</strong> 자릅니다</p>
 </section>
-<section class="card" data-ch="cut">
+<section data-style="leaf" class="card" data-ch="cut">
   <h2>옆은 뒤로 갈수록 길게</h2>
-  <div class="media two"><div><img src="img/cut6a.jpg" alt="옆머리를 사선으로 자르는 장면"></div><div><img src="img/cut6b.jpg" alt="옆과 뒤를 나눠 자르는 장면"></div></div>
+  <div class="media two"><div><img loading="lazy" src="img/cut6a.jpg" alt="옆머리를 사선으로 자르는 장면"></div><div><img loading="lazy" src="img/cut6b.jpg" alt="옆과 뒤를 나눠 자르는 장면"></div></div>
   <p class="desc">사선으로 자르되 <strong>귀 위에서 멈춥니다</strong></p>
 </section>
-<section class="card" data-ch="cut">
+<section data-style="leaf" class="card" data-ch="cut">
   <h2>윗머리 층은 조금만</h2>
-  <div class="media"><div><img src="img/cut7.jpg" alt="윗머리를 세로로 들어 확인하는 장면"></div></div>
+  <div class="media"><div><img loading="lazy" src="img/cut7.jpg" alt="윗머리를 세로로 들어 확인하는 장면"></div></div>
   <p class="desc">세로로 들어 <strong>네모 모양</strong>이면 잘 된 것</p>
 </section>
-<section class="card" data-ch="cut">
+<section data-style="leaf" class="card" data-ch="cut">
   <h2>말린 뒤 숱 치기</h2>
-  <div class="media"><div><img src="img/cut8.jpg" alt="틴닝 가위로 안쪽 숱을 치는 장면"></div></div>
+  <div class="media"><div><img loading="lazy" src="img/cut8.jpg" alt="틴닝 가위로 안쪽 숱을 치는 장면"></div></div>
   <p class="desc">안쪽 무게만 덜고, <strong>겉머리는 그대로</strong></p>
 </section>
-<section class="card" data-ch="cut">
+<section data-style="leaf" class="card" data-ch="cut">
   <h2>귀 라인 정리</h2>
-  <div class="media"><div><img src="img/cut9.jpg" alt="트리머로 귀 주변을 정리하는 장면"></div></div>
+  <div class="media"><div><img loading="lazy" src="img/cut9.jpg" alt="트리머로 귀 주변을 정리하는 장면"></div></div>
   <p class="desc">트리머로 정리, <strong>귓바퀴 위는 조금 남기기</strong></p>
 </section>
 
-<section class="card" data-ch="perm">
+<section data-style="leaf" class="card" data-ch="perm">
   <h2>옆·뒤는 다운펌</h2>
-  <div class="media"><div><img src="img/perm.jpg" alt="옆머리에 약을 바르고 빗으로 눌러 붙이는 다운펌"></div></div>
+  <div class="media"><div><img loading="lazy" src="img/perm.jpg" alt="옆머리에 약을 바르고 빗으로 눌러 붙이는 다운펌"></div></div>
   <p class="desc">뜨는 옆머리와 뒷머리 아래를 <strong>눌러 붙입니다</strong></p>
 </section>
-<section class="card" data-ch="perm">
+<section data-style="leaf" class="card" data-ch="perm">
   <h2>윗머리 펌은 필요할 때만</h2>
   <div class="rows">
     <div><b>곧은 머리라 S자가 안 잡히면</b><span>앞·옆머리 끝에 C컬 펌</span></div>
@@ -263,70 +282,70 @@ h2,h1{font-family:var(--display);font-weight:500;font-size:var(--t-title);line-h
   <span></span>
 </section>
 
-<section class="card" data-ch="dry">
+<section data-style="leaf" class="card" data-ch="dry">
   <h2>끝까지 바짝 말리기</h2>
-  <div class="media"><div><img src="img/dry1.jpg" alt="드라이기 바람 방향을 바꿔 가며 말리는 장면"></div></div>
+  <div class="media"><div><img loading="lazy" src="img/dry1.jpg" alt="드라이기 바람 방향을 바꿔 가며 말리는 장면"></div></div>
   <p class="desc">세 방향 번갈아. <strong>덜 마르면 앞머리가 휩니다</strong></p>
 </section>
-<section class="card" data-ch="dry">
+<section data-style="leaf" class="card" data-ch="dry">
   <h2>마지막 바람은 위에서 뒤로</h2>
-  <div class="media"><div><img src="img/dry2.jpg" alt="끝이 밖으로 휘는 것을 막는 드라이 방법"></div></div>
+  <div class="media"><div><img loading="lazy" src="img/dry2.jpg" alt="끝이 밖으로 휘는 것을 막는 드라이 방법"></div></div>
   <p class="desc">정수리 위에서 뒤로 보내면 <strong>끝이 안 뻗칩니다</strong></p>
 </section>
-<section class="card" data-ch="dry">
+<section data-style="leaf" class="card" data-ch="dry">
   <h2>손가락 갈고리로 S자</h2>
-  <div class="media two"><div><img src="img/dry3a.jpg" alt="손가락 갈고리를 가르마에 올리는 장면"></div><div><img src="img/dry3b.jpg" alt="잡은 채로 위로 살짝 드는 장면"></div></div>
+  <div class="media two"><div><img loading="lazy" src="img/dry3a.jpg" alt="손가락 갈고리를 가르마에 올리는 장면"></div><div><img loading="lazy" src="img/dry3b.jpg" alt="잡은 채로 위로 살짝 드는 장면"></div></div>
   <p class="desc">가르마 옆을 잡고, <strong>살짝 들어 앞으로 밀기</strong></p>
 </section>
-<section class="card" data-ch="dry">
+<section data-style="leaf" class="card" data-ch="dry">
   <h2>뿌리에 열, 그대로 뒤로</h2>
-  <div class="media"><div><img src="img/dry4.jpg" alt="손으로 잡은 머리 뿌리에 드라이기 열을 주는 장면"></div></div>
+  <div class="media"><div><img loading="lazy" src="img/dry4.jpg" alt="손으로 잡은 머리 뿌리에 드라이기 열을 주는 장면"></div></div>
   <p class="desc">뿌리에 바람 주고, <strong>손 떼지 말고 뒤로</strong></p>
 </section>
-<section class="card" data-ch="dry">
+<section data-style="leaf" class="card" data-ch="dry">
   <h2>휘는 앞머리 잡기</h2>
-  <div class="media two"><div><img src="img/dry5a.jpg" alt="휘는 앞머리를 손으로 잡는 장면"></div><div><img src="img/dry5b.jpg" alt="꺾이는 부분에 열을 주는 장면"></div></div>
+  <div class="media two"><div><img loading="lazy" src="img/dry5a.jpg" alt="휘는 앞머리를 손으로 잡는 장면"></div><div><img loading="lazy" src="img/dry5b.jpg" alt="꺾이는 부분에 열을 주는 장면"></div></div>
   <p class="desc">반대로 꺾어 잡고, <strong>꺾인 곳에 열 주기</strong></p>
 </section>
-<section class="card" data-ch="dry">
+<section data-style="leaf" class="card" data-ch="dry">
   <h2>옆머리도 같은 방법</h2>
-  <div class="media"><div><img src="img/dry6.jpg" alt="옆머리를 조금만 잡는 장면"></div></div>
+  <div class="media"><div><img loading="lazy" src="img/dry6.jpg" alt="옆머리를 조금만 잡는 장면"></div></div>
   <p class="desc">한 마디만 잡고 <strong>꺾기, 열, 뒤로 넘기기</strong></p>
 </section>
-<section class="card" data-ch="dry">
+<section data-style="leaf" class="card" data-ch="dry">
   <h2>뒤통수는 살리고, 아래는 누르기</h2>
-  <div class="media two"><div><img src="img/dry7a.jpg" alt="뒤통수에 열을 주며 쥐었다 폈다 하는 장면"></div><div><img src="img/dry7b.jpg" alt="뒤통수 뼈 아래를 손으로 누르는 장면"></div></div>
+  <div class="media two"><div><img loading="lazy" src="img/dry7a.jpg" alt="뒤통수에 열을 주며 쥐었다 폈다 하는 장면"></div><div><img loading="lazy" src="img/dry7b.jpg" alt="뒤통수 뼈 아래를 손으로 누르는 장면"></div></div>
   <p class="desc">위는 <strong>쥐었다 폈다</strong>, 뼈 아래는 <strong>눌러 붙이기</strong></p>
 </section>
 
-<section class="card" data-ch="roll">
+<section data-style="leaf" class="card" data-ch="roll">
   <h2>옆머리는 눌러 말리기</h2>
-  <div class="media two"><div><img src="img/roll1a.jpg" alt="롤빗과 드라이기로 옆머리를 말리는 장면"></div><div><img src="img/roll1b.jpg" alt="옆머리를 손으로 눌러 주는 장면"></div></div>
+  <div class="media two"><div><img loading="lazy" src="img/roll1a.jpg" alt="롤빗과 드라이기로 옆머리를 말리는 장면"></div><div><img loading="lazy" src="img/roll1b.jpg" alt="옆머리를 손으로 눌러 주는 장면"></div></div>
   <p class="desc">토닉 뿌리고, 빗과 드라이기로 <strong>눌러 말리기</strong></p>
 </section>
-<section class="card" data-ch="roll">
+<section data-style="leaf" class="card" data-ch="roll">
   <h2>앞머리는 위로 45도</h2>
-  <div class="media two"><div><img src="img/roll2a.jpg" alt="롤빗으로 앞머리를 위쪽 45도로 당기는 장면"></div><div><img src="img/roll2b.jpg" alt="식기 전에 앞머리 방향을 잡는 장면"></div></div>
+  <div class="media two"><div><img loading="lazy" src="img/roll2a.jpg" alt="롤빗으로 앞머리를 위쪽 45도로 당기는 장면"></div><div><img loading="lazy" src="img/roll2b.jpg" alt="식기 전에 앞머리 방향을 잡는 장면"></div></div>
   <p class="desc">위로 당기며 열 주고, <strong>식기 전에 방향 잡기</strong></p>
 </section>
 
-<section class="card" data-ch="fin">
+<section data-style="leaf" class="card" data-ch="fin">
   <h2>컬크림은 100원 동전만큼</h2>
-  <div class="media"><div><img src="img/prod1.jpg" alt="양손으로 컬크림을 비비는 장면"></div></div>
+  <div class="media"><div><img loading="lazy" src="img/prod1.jpg" alt="양손으로 컬크림을 비비는 장면"></div></div>
   <p class="desc">손바닥에 비벼 <strong>앞머리부터 뒤로</strong> 바릅니다</p>
 </section>
-<section class="card" data-ch="fin">
+<section data-style="leaf" class="card" data-ch="fin">
   <h2>스프레이는 이마를 가리고</h2>
-  <div class="media"><div><img src="img/prod2.jpg" alt="손가락으로 이마를 가리는 장면"></div></div>
+  <div class="media"><div><img loading="lazy" src="img/prod2.jpg" alt="손가락으로 이마를 가리는 장면"></div></div>
   <p class="desc">앞머리 뿌리부터, <strong>옆 세 번, 뒤 두 번</strong></p>
 </section>
-<section class="card" data-ch="fin">
+<section data-style="leaf" class="card" data-ch="fin">
   <h2>오일은 앞머리 끝에만</h2>
-  <div class="media"><div><img src="img/prod3.jpg" alt="앞머리 끝에 오일을 바르는 장면"></div></div>
+  <div class="media"><div><img loading="lazy" src="img/prod3.jpg" alt="앞머리 끝에 오일을 바르는 장면"></div></div>
   <p class="desc">양옆에서 <strong>0.5cm씩</strong>, 끝에만 바릅니다</p>
 </section>
 
-<section class="card" data-ch="fix">
+<section data-style="leaf" class="card" data-ch="fix">
   <h2>잘 안 될 때</h2>
   <div class="rows">
     <div><b>앞머리가 휜다</b><span>덜 마른 것. 끝까지 말리기</span></div>
@@ -336,11 +355,819 @@ h2,h1{font-family:var(--display);font-weight:500;font-size:var(--t-title);line-h
   <span></span>
 </section>
 
-<section class="card" data-ch="end">
+<section data-style="leaf" class="card" data-ch="end">
   <h2>손질 전과 후</h2>
-  <div class="media"><div><img src="img/end.jpg" alt="손질 전(왼쪽)과 손질 후(오른쪽) 비교"></div></div>
+  <div class="media"><div><img loading="lazy" src="img/end.jpg" alt="손질 전(왼쪽)과 손질 후(오른쪽) 비교"></div></div>
   <div style="display:grid;gap:8px;width:100%"><p class="desc">왼쪽 손질 전, 오른쪽 <strong>손으로만</strong> 손질한 뒤</p><p class="credit">사진: 유튜브 그로잉살롱, 관리는 하고 살자, 머슐랭, 동건쌤 영상 캡처</p></div>
 </section>
+
+<!-- STYLES:BEGIN -->
+<!-- 가일컷 -->
+<section class="card cover" data-style="gail" data-ch="start">
+  <h2>가일컷</h2>
+  <div class="media"><div><img src="img/gail/hero.jpg" alt="가일컷 완성 모습" loading="lazy"></div></div>
+  <p class="desc">한쪽은 <strong>뒤로 넘기고</strong> 한쪽은 내립니다</p>
+</section>
+
+<section class="card" data-style="gail" data-ch="key">
+  <h2>한쪽은 넘기고 한쪽은 내리기</h2>
+  <div class="media"><div><img src="img/gail/key1.jpg" alt="한쪽은 뒤로 넘기고 반대쪽은 내린 가일컷 앞모습" loading="lazy"></div></div>
+  <p class="desc">가르마 기준 <strong>좌우가 다르게</strong> 떨어집니다</p>
+</section>
+<section class="card" data-style="gail" data-ch="key">
+  <h2>넘기는 쪽은 좁은 쪽</h2>
+  <div class="media"><div><img src="img/gail/key2.jpg" alt="가르마에서 좁은 쪽 한 마디를 짚는 장면" loading="lazy"></div></div>
+  <p class="desc">갈라진 곳 기준 <strong>좁은 쪽 한 마디</strong>만 뒤로</p>
+</section>
+
+<section class="card" data-style="gail" data-ch="len">
+  <h2>부위별 길이</h2>
+  <div class="rows">
+    <div><b>언더 첫 단</b><span>클리퍼 18mm</span></div>
+    <div><b>그 위</b><span>12mm, 9mm, 6mm 순서로</span><small>18mm 절반쯤 겹치게 올리기</small></div>
+    <div><b>앞머리</b><span>눈썹 아래</span></div>
+    <div><b>숱 칠 때 앞머리</b><span>라인 1cm는 남기기</span></div>
+  </div>
+  <span></span>
+</section>
+
+<section class="card" data-style="gail" data-ch="cut">
+  <h2>가르마부터 나누기</h2>
+  <div class="media two"><div><img src="img/gail/cut1a.jpg" alt="눈썹 산에서 가르마를 타는 장면" loading="lazy"></div><div><img src="img/gail/cut1b.jpg" alt="골든 백 미디엄 포인트까지 섹션을 나누는 장면" loading="lazy"></div></div>
+  <p class="desc"><strong>눈썹 산</strong>에서 타고 골든 백 포인트까지</p>
+</section>
+<section class="card" data-style="gail" data-ch="cut">
+  <h2>클리퍼는 박스처럼 일자로</h2>
+  <div class="media two"><div><img src="img/gail/cut2a.jpg" alt="클리퍼를 일자로 대고 자르는 장면" loading="lazy"></div><div><img src="img/gail/cut2b.jpg" alt="구레나룻 앞을 대각선으로 굴려 자르는 장면" loading="lazy"></div></div>
+  <p class="desc">네모 박스처럼, 구레나룻 앞만 <strong>대각선</strong></p>
+</section>
+<section class="card" data-style="gail" data-ch="cut">
+  <h2>백은 45도, 옆은 90도</h2>
+  <div class="media"><div><img src="img/gail/cut3.jpg" alt="뒤는 45도, 옆으로 갈수록 90도로 클리퍼를 대는 장면" loading="lazy"></div></div>
+  <p class="desc">백사이드는 굴려서 <strong>자연스럽게 연결</strong></p>
+</section>
+<section class="card" data-style="gail" data-ch="cut">
+  <h2>윗머리는 눕혀서</h2>
+  <div class="media"><div><img src="img/gail/cut4.jpg" alt="클리퍼로 자른 각도 그대로 가위로 윗머리를 자르는 장면" loading="lazy"></div></div>
+  <p class="desc">클리퍼 각도 그대로 <strong>많이 눕혀서</strong> 자릅니다</p>
+</section>
+<section class="card" data-style="gail" data-ch="cut">
+  <h2>앞머리는 눈썹 아래</h2>
+  <div class="media"><div><img src="img/gail/cut5.jpg" alt="앞머리를 눈썹 아래 길이로 포인트 컷하는 장면" loading="lazy"></div></div>
+  <p class="desc">일자 대신 <strong>포인트 컷</strong>으로 자릅니다</p>
+</section>
+<section class="card" data-style="gail" data-ch="cut">
+  <h2>넘기는 쪽 코너 자르기</h2>
+  <div class="media"><div><img src="img/gail/cut6.jpg" alt="앞머리 코너를 들어 일자로 자르는 장면" loading="lazy"></div></div>
+  <p class="desc">코너를 <strong>조금 더</strong> 잘라야 잘 넘어갑니다</p>
+</section>
+<section class="card" data-style="gail" data-ch="cut">
+  <h2>숱 칠 땐 앞머리 1cm 남기기</h2>
+  <div class="media"><div><img src="img/gail/cut7.jpg" alt="앞머리를 1cm 남기고 숱을 치는 장면" loading="lazy"></div></div>
+  <p class="desc">라인 숱을 치면 <strong>앞머리가 파여</strong> 보입니다</p>
+</section>
+
+<section class="card" data-style="gail" data-ch="perm">
+  <h2>다운펌은 첫 단 꽉 누르기</h2>
+  <div class="media"><div><img src="img/gail/perm1.jpg" alt="옆머리 아래에 다운펌 약을 바른 모습" loading="lazy"></div></div>
+  <p class="desc">두 번째 단부터는 <strong>굴곡 보며</strong> 누릅니다</p>
+</section>
+<section class="card" data-style="gail" data-ch="perm">
+  <h2>다운펌 주의</h2>
+  <div class="rows">
+    <div><b>푹 들어간 구레나룻</b><span>바르지 않기</span><small>꽉 누르면 오히려 뻗칩니다</small></div>
+    <div><b>약 양</b><span>붓 끝에 얹어 뿌리 쪽에</span></div>
+    <div><b>한 단 바를 때마다</b><span>거울로 모양 확인</span></div>
+    <div><b>핀셋</b><span>쓰지 않기</span><small>자국이 남아 굴곡 감을 못 익힙니다</small></div>
+  </div>
+  <span></span>
+</section>
+
+<section class="card" data-style="gail" data-ch="dry">
+  <h2>앞으로 내려 말려 가르마 찾기</h2>
+  <div class="media two"><div><img src="img/gail/dry1a.jpg" alt="머리를 앞으로 내려 말리는 장면" loading="lazy"></div><div><img src="img/gail/dry1b.jpg" alt="드라이기 노즐을 세로로 세워 앞쪽에 대는 장면" loading="lazy"></div></div>
+  <p class="desc">노즐을 <strong>세로로 세워</strong> 갈라지는 곳 찾기</p>
+</section>
+<section class="card" data-style="gail" data-ch="dry">
+  <h2>좁은 쪽은 갈고리로 뒤로</h2>
+  <div class="media two"><div><img src="img/gail/dry2a.jpg" alt="손을 갈고리 모양으로 뒤로 넘기는 장면" loading="lazy"></div><div><img src="img/gail/dry2b.jpg" alt="넘기면서 드라이기로 말리는 장면" loading="lazy"></div></div>
+  <p class="desc">손을 <strong>갈고리 모양</strong>으로 뒤로 넘기며 말리기</p>
+</section>
+<section class="card" data-style="gail" data-ch="dry">
+  <h2>앞머리 볼륨은 걸어서 열</h2>
+  <div class="media two"><div><img src="img/gail/dry3a.jpg" alt="앞머리를 가르마에 걸어 잡는 장면" loading="lazy"></div><div><img src="img/gail/dry3b.jpg" alt="잡은 앞머리 안쪽에 열을 주는 장면" loading="lazy"></div></div>
+  <p class="desc">가르마에 걸어 잡고 <strong>안쪽에 열</strong>, 식히기</p>
+</section>
+<section class="card" data-style="gail" data-ch="dry">
+  <h2>M자 부분은 바람 피하기</h2>
+  <div class="media"><div><img src="img/gail/dry4.jpg" alt="헤어라인을 따라 일자로 드라이기를 대는 장면" loading="lazy"></div></div>
+  <p class="desc">헤어라인은 <strong>일자로</strong> 쭉쭉 말립니다</p>
+</section>
+
+<section class="card" data-style="gail" data-ch="fin">
+  <h2>제품은 갈고리, 나머지는 털듯이</h2>
+  <div class="media two"><div><img src="img/gail/fin1a.jpg" alt="넘기는 쪽에 갈고리 모양으로 제품을 바르는 장면" loading="lazy"></div><div><img src="img/gail/fin1b.jpg" alt="나머지 머리에 털듯이 제품을 바르는 장면" loading="lazy"></div></div>
+  <p class="desc">넘기는 쪽은 <strong>갈고리 모양</strong>으로 바르기</p>
+</section>
+<section class="card" data-style="gail" data-ch="fin">
+  <h2>새끼손가락 안에 스프레이</h2>
+  <div class="media two"><div><img src="img/gail/fin2a.jpg" alt="새끼손가락으로 섹션을 타 스프레이를 뿌리는 장면" loading="lazy"></div><div><img src="img/gail/fin2b.jpg" alt="윗머리 안쪽에 스프레이를 뿌리는 장면" loading="lazy"></div></div>
+  <p class="desc">굳으면서 <strong>지지대</strong> 역할을 합니다</p>
+</section>
+<section class="card" data-style="gail" data-ch="fin">
+  <h2>고정 스프레이는 앞·옆만</h2>
+  <div class="media two"><div><img src="img/gail/fin3a.jpg" alt="앞머리와 옆머리에 고정 스프레이를 뿌리는 장면" loading="lazy"></div><div><img src="img/gail/fin3b.jpg" alt="드라이기로 스프레이를 눌러 말리는 장면" loading="lazy"></div></div>
+  <p class="desc">뿌린 뒤 <strong>드라이기로 눌러</strong> 한 번 더 잡기</p>
+</section>
+
+<section class="card" data-style="gail" data-ch="fix">
+  <h2>잘 안 될 때</h2>
+  <div class="rows">
+    <div><b>볼륨이 죽는다</b><span>들고 뿌리에 열, 식히기</span></div>
+    <div><b>튀어나온 곳이 있다</b><span>드라이기로 눌러 주기</span></div>
+    <div><b>앞머리가 뭉쳐 보인다</b><span>모발을 들어 딥포인팅</span></div>
+    <div><b>왁스를 쓸수록 이상하다</b><span>20초 안에 끝내고 스프레이</span></div>
+  </div>
+  <span></span>
+</section>
+
+<section class="card" data-style="gail" data-ch="end">
+  <h2>가일컷 완성</h2>
+  <div class="media"><div><img src="img/gail/end.jpg" alt="가일컷 스타일링을 마친 모습" loading="lazy"></div></div>
+  <div style="display:grid;gap:8px;width:100%"><p class="desc">가르마 기준 <strong>한쪽은 넘기고</strong> 한쪽은 내리면 끝</p><p class="credit">사진: 유튜브 로아티 Roati, 비핸썸, 맨즈헤어승기쌤 영상 캡처</p></div>
+</section>
+
+<!-- 드롭컷 -->
+<section class="card cover" data-style="drop" data-ch="start">
+  <h2>드롭컷</h2>
+  <div class="media"><div><img src="img/drop/hero.jpg" alt="드롭컷 완성 모습" loading="lazy"></div></div>
+  <p class="desc">윗머리는 <strong>플랫</strong>, 앞머리는 가볍게 떨어집니다</p>
+</section>
+
+<section class="card" data-style="drop" data-ch="key">
+  <h2>윗머리는 플랫하게</h2>
+  <div class="media"><div><img src="img/drop/key1.jpg" alt="정수리부터 앞머리까지 평평한 옆모습" loading="lazy"></div></div>
+  <p class="desc">정수리부터 앞머리까지 <strong>직선으로</strong></p>
+</section>
+<section class="card" data-style="drop" data-ch="key">
+  <h2>앞머리는 양옆으로 떨어짐</h2>
+  <div class="media"><div><img src="img/drop/key2.jpg" alt="앞머리가 양옆으로 떨어지는 정면" loading="lazy"></div></div>
+  <p class="desc">가운데는 올리고, <strong>양옆은 떨어지게</strong></p>
+</section>
+
+<section class="card" data-style="drop" data-ch="len">
+  <h2>부위별 길이</h2>
+  <div class="rows">
+    <div><b>앞머리</b><span>이마 높이의 반 정도</span></div>
+    <div><b>옆·뒤 기준</b><span>클리퍼 20mm 전후</span></div>
+    <div><b>아래쪽</b><span>15mm, 맨 아래 13mm</span></div>
+    <div><b>윗머리 층</b><span>앞머리 길이에 맞춰 90도</span></div>
+  </div>
+  <span></span>
+</section>
+
+<section class="card" data-style="drop" data-ch="cut">
+  <h2>옆은 19mm로 밀기</h2>
+  <div class="media"><div><img src="img/drop/cut1.jpg" alt="클리퍼 가이드로 옆머리를 수직으로 올려 미는 장면" loading="lazy"></div></div>
+  <p class="desc">두상 따라 말고 <strong>수직으로</strong> 올립니다</p>
+</section>
+<section class="card" data-style="drop" data-ch="cut">
+  <h2>뒤도 20mm 직선으로</h2>
+  <div class="media"><div><img src="img/drop/cut2.jpg" alt="클리퍼 가이드로 뒷머리를 20mm로 정리하는 장면" loading="lazy"></div></div>
+  <p class="desc">둥글게 말고 <strong>스퀘어</strong>로, 라인은 높게</p>
+</section>
+<section class="card" data-style="drop" data-ch="cut">
+  <h2>아래는 15mm, 13mm</h2>
+  <div class="media"><div><img src="img/drop/cut3.jpg" alt="목 아래쪽을 13mm로 정리하는 장면" loading="lazy"></div></div>
+  <p class="desc">위 20mm와 이어서 <strong>한 단계씩</strong> 짧게</p>
+</section>
+<section class="card" data-style="drop" data-ch="cut">
+  <h2>앞머리부터 길이 정하기</h2>
+  <div class="media"><div><img src="img/drop/cut4.jpg" alt="앞머리를 이마 높이 반 정도로 자르는 장면" loading="lazy"></div></div>
+  <p class="desc">이마 높이의 <strong>반 정도</strong>로 먼저 자릅니다</p>
+</section>
+<section class="card" data-style="drop" data-ch="cut">
+  <h2>앞머리는 90도로 층</h2>
+  <div class="media"><div><img src="img/drop/cut5.jpg" alt="이마 쪽 머리를 90도로 들어 층을 내는 장면" loading="lazy"></div></div>
+  <p class="desc">이마 쪽 <strong>90도</strong>, 양옆은 살짝 가운데로</p>
+</section>
+<section class="card" data-style="drop" data-ch="cut">
+  <h2>옆은 세로로 90도</h2>
+  <div class="media"><div><img src="img/drop/cut6.jpg" alt="옆머리를 세로로 90도 들어 자르는 장면" loading="lazy"></div></div>
+  <p class="desc">옆 20mm 길이에 맞춰 <strong>그대로 연결</strong></p>
+</section>
+<section class="card" data-style="drop" data-ch="cut">
+  <h2>뒤는 피벗으로 연결</h2>
+  <div class="media"><div><img src="img/drop/cut7.jpg" alt="뒷머리를 90도 레이어로 연결해 자르는 장면" loading="lazy"></div></div>
+  <p class="desc">20mm 길이를 가이드로 <strong>90도 레이어</strong></p>
+</section>
+<section class="card" data-style="drop" data-ch="cut">
+  <h2>무거운 곳은 틴닝으로</h2>
+  <div class="media"><div><img src="img/drop/cut8.jpg" alt="틴닝 가위로 무게를 덜어내는 장면" loading="lazy"></div></div>
+  <p class="desc">세로로 들어 <strong>무게감만</strong> 날립니다</p>
+</section>
+
+<section class="card" data-style="drop" data-ch="dry">
+  <h2>정수리 눌러 말리기</h2>
+  <div class="media"><div><img src="img/drop/dry1.jpg" alt="손으로 정수리를 누르며 드라이하는 장면" loading="lazy"></div></div>
+  <p class="desc">정수리를 <strong>누르면서</strong> 드라이합니다</p>
+</section>
+<section class="card" data-style="drop" data-ch="dry">
+  <h2>뒤에서 앞으로 말리기</h2>
+  <div class="media"><div><img src="img/drop/dry2.jpg" alt="뒤에서 앞으로 머리를 말리는 장면" loading="lazy"></div></div>
+  <p class="desc">가운데 가르마 쪽은 <strong>마지막에</strong> 말립니다</p>
+</section>
+
+<section class="card" data-style="drop" data-ch="roll">
+  <h2>롤빗으로 일자로 빗기</h2>
+  <div class="media two"><div><img src="img/drop/roll1a.jpg" alt="롤빗으로 머리를 일자로 빗는 장면" loading="lazy"></div><div><img src="img/drop/roll1b.jpg" alt="앞머리만 올라가게 드라이기를 대는 장면" loading="lazy"></div></div>
+  <p class="desc">밑에 손을 대고 <strong>앞머리만</strong> 올립니다</p>
+</section>
+<section class="card" data-style="drop" data-ch="roll">
+  <h2>대각선으로 빗고 반 바퀴</h2>
+  <div class="media two"><div><img src="img/drop/roll2a.jpg" alt="롤빗을 반 바퀴 굴리는 장면" loading="lazy"></div><div><img src="img/drop/roll2b.jpg" alt="언덕에 열을 주는 장면" loading="lazy"></div></div>
+  <p class="desc">굴려서 언덕에 <strong>열 3초</strong>, 대각선으로 빼기</p>
+</section>
+<section class="card" data-style="drop" data-ch="roll">
+  <h2>앞머리 끝은 ㄱ자로</h2>
+  <div class="media two"><div><img src="img/drop/roll3a.jpg" alt="앞머리 끝을 잡아 꺾는 장면" loading="lazy"></div><div><img src="img/drop/roll3b.jpg" alt="꺾인 윗부분에 열을 주는 장면" loading="lazy"></div></div>
+  <p class="desc">끝을 꺾고 <strong>위쪽에 열</strong>, 3초 식혀 빼기</p>
+</section>
+
+<section class="card" data-style="drop" data-ch="fin">
+  <h2>제품은 위에서 아래로</h2>
+  <div class="media"><div><img src="img/drop/fin1.jpg" alt="손에 제품을 덜어 머리에 바르는 장면" loading="lazy"></div></div>
+  <p class="desc">왁스, 컬크림, 에센스를 <strong>가볍게</strong> 털듯이</p>
+</section>
+<section class="card" data-style="drop" data-ch="fin">
+  <h2>스프레이는 이마 가리고</h2>
+  <div class="media two"><div><img src="img/drop/fin2a.jpg" alt="손으로 이마를 가리고 스프레이를 뿌리는 장면" loading="lazy"></div><div><img src="img/drop/fin2b.jpg" alt="뿌린 뒤 바로 드라이기로 말리는 장면" loading="lazy"></div></div>
+  <p class="desc">뿌리고 <strong>바로 말려</strong> 고정합니다</p>
+</section>
+<section class="card" data-style="drop" data-ch="fin">
+  <h2>오일은 앞머리 끝에만</h2>
+  <div class="media"><div><img src="img/drop/fin3.jpg" alt="오일을 앞머리 끝에 바르는 장면 설명" loading="lazy"></div></div>
+  <p class="desc">뿌리 쪽은 안 되고, <strong>끝에만</strong> 바릅니다</p>
+</section>
+
+<section class="card" data-style="drop" data-ch="fix">
+  <h2>잘 안 될 때</h2>
+  <div class="rows">
+    <div><b>앞머리가 안 올라간다</b><span>센 바람으로 좌우 번갈아</span></div>
+    <div><b>가르마가 갈라진다</b><span>핀컬로 집고 열 주기</span><small>윗머리는 앞으로 떨어지게</small></div>
+    <div><b>옆머리가 뜬다</b><span>드라이로 누르고 손으로 누르기</span><small>계속 뜨면 다운펌</small></div>
+    <div><b>생머리가 안 넘어간다</b><span>올라가는 곳을 잡고 열 식히기</span></div>
+  </div>
+  <span></span>
+</section>
+
+<section class="card" data-style="drop" data-ch="end">
+  <h2>완성 옆모습</h2>
+  <div class="media"><div><img src="img/drop/end.jpg" alt="손질을 마친 드롭컷 옆모습" loading="lazy"></div></div>
+  <div style="display:grid;gap:8px;width:100%"><p class="desc">윗머리는 <strong>평평하게</strong>, 뒤통수는 살짝 살리기</p><p class="credit">사진: 유튜브 그로잉살롱, 머슐랭, 관리는 하고 살자 영상 캡처</p></div>
+</section>
+
+<!-- 애즈펌 -->
+<section class="card cover" data-style="ase" data-ch="start">
+  <h2>애즈펌</h2>
+  <div class="media"><div><img src="img/ase/hero.jpg" alt="애즈펌 완성 모습" loading="lazy"></div></div>
+  <p class="desc">가르마 쪽 이마만 살짝 열고 <strong>앞머리를 넘기는</strong> 펌</p>
+</section>
+
+<section class="card" data-style="ase" data-ch="key">
+  <h2>가르마는 6:4</h2>
+  <div class="media"><div><img src="img/ase/key1.jpg" alt="가르마를 6대 4로 나눈 모습" loading="lazy"></div></div>
+  <p class="desc">가르마를 <strong>6:4</strong>로 타고 시작합니다</p>
+</section>
+<section class="card" data-style="ase" data-ch="key">
+  <h2>윗볼륨은 낮게, 앞은 살리기</h2>
+  <div class="media"><div><img src="img/ase/key2.jpg" alt="윗볼륨은 낮고 앞머리 볼륨이 살아 있는 완성 모습" loading="lazy"></div></div>
+  <p class="desc">윗볼륨은 낮추고 <strong>앞머리 볼륨</strong>만 살립니다</p>
+</section>
+
+<section class="card" data-style="ase" data-ch="len">
+  <h2>부위별 길이</h2>
+  <div class="rows">
+    <div><b>옆·뒤</b><span>투블럭 15mm</span></div>
+    <div><b>구레나룻</b><span>원래 길이 유지</span></div>
+    <div><b>윗머리</b><span>가르마 쪽이 가장 길게</span><small>옆으로 갈수록 짧게</small></div>
+  </div>
+  <span></span>
+</section>
+
+<section class="card" data-style="ase" data-ch="cut">
+  <h2>옆·뒤는 15mm</h2>
+  <div class="media"><div><img src="img/ase/cut1.jpg" alt="바리깡으로 옆머리를 15mm로 미는 장면" loading="lazy"></div></div>
+  <p class="desc">구레나룻은 <strong>너무 짧지 않게</strong> 남깁니다</p>
+</section>
+<section class="card" data-style="ase" data-ch="cut">
+  <h2>제비추리는 더 짧게</h2>
+  <div class="media"><div><img src="img/ase/cut2.jpg" alt="목 뒤 제비추리 부분을 더 짧게 미는 장면" loading="lazy"></div></div>
+  <p class="desc">어두운 곳은 <strong>더 짧은 mm</strong>로 밀어 맞춥니다</p>
+</section>
+<section class="card" data-style="ase" data-ch="cut">
+  <h2>윗머리는 가르마가 길게</h2>
+  <div class="media"><div><img src="img/ase/cut3.jpg" alt="가르마를 기준으로 윗머리 길이를 확인하는 장면" loading="lazy"></div></div>
+  <p class="desc">가운데는 두고 <strong>옆만 살짝</strong> 정리합니다</p>
+</section>
+<section class="card" data-style="ase" data-ch="cut">
+  <h2>앞머리는 윗부분만 가볍게</h2>
+  <div class="media"><div><img src="img/ase/cut4.jpg" alt="앞머리 윗부분만 들어 숱을 가볍게 치는 장면" loading="lazy"></div></div>
+  <p class="desc">양쪽이 무거우면 답답하니 <strong>윗부분만</strong> 칩니다</p>
+</section>
+
+<section class="card" data-style="ase" data-ch="down">
+  <h2>꼬리빗으로 얇게 떠서</h2>
+  <div class="media"><div><img src="img/ase/down1.jpg" alt="꼬리빗으로 얇게 떠 다운펌 약을 바르는 장면" loading="lazy"></div></div>
+  <p class="desc">머리를 얇게 떠서 <strong>뿌리까지</strong> 바릅니다</p>
+</section>
+<section class="card" data-style="ase" data-ch="down">
+  <h2>뒷머리는 고개 고정</h2>
+  <div class="media"><div><img src="img/ase/down2.jpg" alt="뒷머리에 다운펌 약을 바르는 장면" loading="lazy"></div></div>
+  <p class="desc">바를 땐 고개를 <strong>움직이지 않게</strong></p>
+</section>
+<section class="card" data-style="ase" data-ch="down">
+  <h2>뜨는 곳만 눌러 붙이기</h2>
+  <div class="media"><div><img src="img/ase/down3.jpg" alt="빗질하며 뜨는 부분만 누르는 장면" loading="lazy"></div></div>
+  <p class="desc">빗질로 확인하고 <strong>뜨는 곳만</strong> 누릅니다</p>
+</section>
+
+<section class="card" data-style="ase" data-ch="perm">
+  <h2>가르마선 따라 가로로</h2>
+  <div class="media"><div><img src="img/ase/perm1.jpg" alt="가르마선과 평행하게 가로로 와인딩하는 장면" loading="lazy"></div></div>
+  <p class="desc">가르마선과 <strong>평행하게</strong> 가로로 감습니다</p>
+</section>
+<section class="card" data-style="ase" data-ch="perm">
+  <h2>두 단까지 2바퀴</h2>
+  <div class="media"><div><img src="img/ase/perm2.jpg" alt="가로 두 단까지 두 바퀴씩 와인딩한 모습" loading="lazy"></div></div>
+  <p class="desc">두 바퀴면 <strong>약한 S컬</strong>이 나옵니다</p>
+</section>
+<section class="card" data-style="ase" data-ch="perm">
+  <h2>그 아래는 사선으로</h2>
+  <div class="media"><div><img src="img/ase/perm3.jpg" alt="사선 섹션으로 얼굴 방향으로 와인딩하는 장면" loading="lazy"></div></div>
+  <p class="desc">얼굴 쪽으로 2바퀴, <strong>이마라인을 감싸</strong> 넘깁니다</p>
+</section>
+<section class="card" data-style="ase" data-ch="perm">
+  <h2>뒤는 브이 모양으로</h2>
+  <div class="media"><div><img src="img/ase/perm4.jpg" alt="뒷머리를 브이 모양으로 와인딩한 모습" loading="lazy"></div></div>
+  <p class="desc">2바퀴, 뒤통수가 납작하면 <strong>2.5바퀴</strong>도 됩니다</p>
+</section>
+<section class="card" data-style="ase" data-ch="perm">
+  <h2>꼬지로 볼륨 조절</h2>
+  <div class="media"><div><img src="img/ase/perm5.jpg" alt="롯드 사이에 꼬지를 끼워 볼륨을 조절하는 장면" loading="lazy"></div></div>
+  <p class="desc">꼬지 위치로 볼륨을 <strong>살리고 죽입니다</strong></p>
+</section>
+
+<section class="card" data-style="ase" data-ch="iron">
+  <h2>아이롱은 뿌리 14, 끝 16</h2>
+  <div class="media"><div><img src="img/ase/iron1.jpg" alt="아이롱으로 와인딩하는 장면" loading="lazy"></div></div>
+  <p class="desc">뿌리 <strong>14mm</strong>, 끝 16mm, 위는 경계선만 풀기</p>
+</section>
+<section class="card" data-style="ase" data-ch="iron">
+  <h2>온도는 140~160도</h2>
+  <div class="media"><div><img src="img/ase/iron2.jpg" alt="아이롱 온도를 맞춰 와인딩하는 장면" loading="lazy"></div></div>
+  <p class="desc">곱슬이 심하면 높게, 보통 <strong>150도</strong></p>
+</section>
+
+<section class="card" data-style="ase" data-ch="dry">
+  <h2>털어 말리다 앞만 뒤로</h2>
+  <div class="media"><div><img src="img/ase/dry1.jpg" alt="손으로 앞머리를 잡아 뒤로 보내며 말리는 장면" loading="lazy"></div></div>
+  <p class="desc">거의 말랐을 때 <strong>가르마 쪽만</strong> 뒤로 보냅니다</p>
+</section>
+<section class="card" data-style="ase" data-ch="dry">
+  <h2>애즈 느낌 앞머리</h2>
+  <div class="media"><div><img src="img/ase/dry2.jpg" alt="드라이기로 앞머리 뿌리를 들어 꺾어 주는 장면" loading="lazy"></div></div>
+  <p class="desc">약한 열로 뿌리를 들어 <strong>안쪽으로 꺾기</strong></p>
+</section>
+
+<section class="card" data-style="ase" data-ch="end">
+  <h2>완성</h2>
+  <div class="media"><div><img src="img/ase/end.jpg" alt="애즈펌 완성 뒷모습" loading="lazy"></div></div>
+  <div style="display:grid;gap:8px;width:100%"><p class="desc">내려서 말리고 <strong>앞쪽만 뒤로</strong> 보내면 끝</p><p class="credit">사진: 유튜브 그로잉살롱, 궁달언니 영상 캡처</p></div>
+</section>
+
+<!-- 시스루 댄디컷 -->
+<section class="card cover" data-style="dandy" data-ch="start">
+  <h2>시스루 댄디컷</h2>
+  <div class="media"><div><img src="img/dandy/hero.jpg" alt="시스루 댄디컷 완성 모습" loading="lazy"></div></div>
+  <p class="desc">앞머리 숱을 쳐서 이마가 <strong>비치게</strong> 합니다</p>
+</section>
+
+<section class="card" data-style="dandy" data-ch="key">
+  <h2>앞머리는 이마가 비친다</h2>
+  <div class="media"><div><img src="img/dandy/key1.jpg" alt="이마가 비칠 듯 말 듯한 앞머리 정면" loading="lazy"></div></div>
+  <p class="desc">내려도 가볍게, 이마가 <strong>비칠 듯 말 듯</strong></p>
+</section>
+<section class="card" data-style="dandy" data-ch="key">
+  <h2>옆·뒤는 스퀘어로</h2>
+  <div class="media"><div><img src="img/dandy/key2.jpg" alt="옆과 뒤가 스퀘어 모양으로 짧게 정리된 완성 마네킹" loading="lazy"></div></div>
+  <p class="desc">옆뒤는 짧게, 모양은 <strong>스퀘어</strong>로</p>
+</section>
+
+<section class="card" data-style="dandy" data-ch="len">
+  <h2>부위별 길이</h2>
+  <div class="rows">
+    <div><b>옆·뒤</b><span>클리퍼 19~20mm</span><small>중간부터 15mm로 연결</small></div>
+    <div><b>윗머리</b><span>뒷머리보다 1~2cm 길게</span></div>
+    <div><b>앞머리</b><span>눈썹 살짝 아래 ~ 눈동자 위</span></div>
+    <div><b>층</b><span>90도로 조금만</span></div>
+  </div>
+  <span></span>
+</section>
+
+<section class="card" data-style="dandy" data-ch="cut">
+  <h2>옆·뒤는 클리퍼 19mm</h2>
+  <div class="media two"><div><img src="img/dandy/cut1.jpg" alt="가이드를 끼고 뒷머리를 클리퍼로 미는 장면" loading="lazy"></div><div><img src="img/dandy/cut2.jpg" alt="클리퍼를 세워서 스퀘어 모양으로 올라가는 장면" loading="lazy"></div></div>
+  <p class="desc"><strong>19mm</strong>로 먼저, 클리퍼는 살짝 세워서</p>
+</section>
+<section class="card" data-style="dandy" data-ch="cut">
+  <h2>구레나룻 남기고 15mm</h2>
+  <div class="media two"><div><img src="img/dandy/cut3.jpg" alt="구레나룻을 살리고 그 위에 클리퍼를 대는 장면" loading="lazy"></div><div><img src="img/dandy/cut4.jpg" alt="15mm로 20mm 중간까지 연결하는 장면" loading="lazy"></div></div>
+  <p class="desc">구레나룻 살리고, <strong>15mm</strong>로 중간까지 연결</p>
+</section>
+<section class="card" data-style="dandy" data-ch="cut">
+  <h2>목선 따라 라인 정리</h2>
+  <div class="media two"><div><img src="img/dandy/cut5a.jpg" alt="목선을 따라 트리머로 라인을 정리하는 장면" loading="lazy"></div><div><img src="img/dandy/cut5b.jpg" alt="구레나룻을 조각하듯 정리하는 장면" loading="lazy"></div></div>
+  <p class="desc">자라는 <strong>목선 따라</strong>, 템플은 타이트하게</p>
+</section>
+<section class="card" data-style="dandy" data-ch="cut">
+  <h2>앞머리 길이 정하기</h2>
+  <div class="media"><div><img src="img/dandy/cut7a.jpg" alt="앞머리 길이를 눈썹 아래로 맞추는 장면" loading="lazy"></div></div>
+  <p class="desc">눈썹 살짝 아래, <strong>눈동자 위</strong>까지</p>
+</section>
+<section class="card" data-style="dandy" data-ch="cut">
+  <h2>앞머리는 들어서 자르기</h2>
+  <div class="media"><div><img src="img/dandy/cut7b.jpg" alt="앞머리를 들어 살짝 비틀어 자르는 장면" loading="lazy"></div></div>
+  <p class="desc">내려서 일자로 말고, <strong>비틀어서 포인트로</strong></p>
+</section>
+<section class="card" data-style="dandy" data-ch="cut">
+  <h2>관자 쪽 길이 살리기</h2>
+  <div class="media"><div><img src="img/dandy/cut8.jpg" alt="앞머리와 사이드 사이 관자 쪽 길이를 확인하는 장면" loading="lazy"></div></div>
+  <p class="desc">앞머리와 사이드 사이 <strong>관자 쪽</strong>을 꼭 남기기</p>
+</section>
+<section class="card" data-style="dandy" data-ch="cut">
+  <h2>윗머리는 뚜껑처럼</h2>
+  <div class="media two"><div><img src="img/dandy/cut9.jpg" alt="윗머리 길이를 뒷머리보다 길게 정하는 장면" loading="lazy"></div><div><img src="img/dandy/cut10.jpg" alt="사이드를 전대각으로 자르는 장면" loading="lazy"></div></div>
+  <p class="desc">뒷머리보다 <strong>1~2cm</strong> 길게, 옆은 전대각 살짝</p>
+</section>
+<section class="card" data-style="dandy" data-ch="cut">
+  <h2>층은 90도로 조금만</h2>
+  <div class="media two"><div><img src="img/dandy/cut12a.jpg" alt="앞머리를 세로 섹션으로 90도 들어 층을 내는 장면" loading="lazy"></div><div><img src="img/dandy/cut12b.jpg" alt="옆머리를 가로로 90도 들어 층을 내는 장면" loading="lazy"></div></div>
+  <p class="desc">앞·옆·뒤 모두 <strong>90도</strong>로만 들어 자르기</p>
+</section>
+<section class="card" data-style="dandy" data-ch="cut">
+  <h2>숱은 중간부터 틴닝</h2>
+  <div class="media"><div><img src="img/dandy/cut14.jpg" alt="틴닝 가위로 중간 지점의 숱을 치는 장면" loading="lazy"></div></div>
+  <p class="desc">길이 <strong>중간~3분의 2</strong> 지점, 여러 곳 찍기</p>
+</section>
+<section class="card" data-style="dandy" data-ch="cut">
+  <h2>앞머리 숱도 치기</h2>
+  <div class="media"><div><img src="img/dandy/cut15.jpg" alt="앞머리 숱을 치는 장면" loading="lazy"></div></div>
+  <p class="desc">까만 부분이 <strong>살짝 없어질 때까지</strong> 칩니다</p>
+</section>
+
+<section class="card" data-style="dandy" data-ch="perm">
+  <h2>펌은 아이롱펌으로</h2>
+  <div class="rows">
+    <div><b>일반 펌</b><span>볼륨이 금방 죽고 2주면 풀림</span></div>
+    <div><b>아이롱펌</b><span>볼륨이 오래 감</span></div>
+  </div>
+  <span></span>
+</section>
+<section class="card" data-style="dandy" data-ch="perm">
+  <h2>볼륨 구간만 말기</h2>
+  <div class="media two"><div><img src="img/dandy/perm1.jpg" alt="관자가 채워지는 곳까지 섹션을 나누는 장면" loading="lazy"></div><div><img src="img/dandy/perm3.jpg" alt="필요한 구간에만 롯드를 말아 놓은 장면" loading="lazy"></div></div>
+  <p class="desc">관자가 채워지는 곳까지, <strong>필요한 곳만</strong> 말기</p>
+</section>
+<section class="card" data-style="dandy" data-ch="perm">
+  <h2>뒤·옆은 다운펌</h2>
+  <div class="media two"><div><img src="img/dandy/perm4.jpg" alt="뒷머리에 다운펌 약을 바르는 장면" loading="lazy"></div><div><img src="img/dandy/perm5.jpg" alt="밑단부터 꼼꼼히 약을 바르는 장면" loading="lazy"></div></div>
+  <p class="desc">말지 않고 눌러서, 약은 <strong>밑단부터</strong> 꼼꼼히</p>
+</section>
+
+<section class="card" data-style="dandy" data-ch="dry">
+  <h2>앞머리는 뿌리부터 볼륨</h2>
+  <div class="media two"><div><img src="img/dandy/dry1.jpg" alt="롤빗으로 가운데 앞머리 뿌리 볼륨을 살리는 장면" loading="lazy"></div><div><img src="img/dandy/dry2.jpg" alt="각도를 그대로 펴서 빼는 장면" loading="lazy"></div></div>
+  <p class="desc">뿌리~중간 <strong>볼륨</strong>, 뺄 때는 각도 그대로</p>
+</section>
+<section class="card" data-style="dandy" data-ch="dry">
+  <h2>옆 앞머리는 바깥으로</h2>
+  <div class="media"><div><img src="img/dandy/dry3.jpg" alt="사이드 앞머리를 바깥쪽으로 굴려 빼는 장면" loading="lazy"></div></div>
+  <p class="desc">가운데는 떨어지게, 양옆은 <strong>바깥쪽으로</strong></p>
+</section>
+<section class="card" data-style="dandy" data-ch="dry">
+  <h2>옆은 눌러 볼륨 죽이기</h2>
+  <div class="media two"><div><img src="img/dandy/dry6a.jpg" alt="드라이기 바람으로 앞머리를 좌우로 펼치는 장면" loading="lazy"></div><div><img src="img/dandy/dry6b.jpg" alt="옆머리를 손으로 눌러 말리는 장면" loading="lazy"></div></div>
+  <p class="desc">앞머리는 좌우로, <strong>옆은 눌러</strong> 말리기</p>
+</section>
+
+<section class="card" data-style="dandy" data-ch="fin">
+  <h2>제품은 앞머리 빼고</h2>
+  <div class="media two"><div><img src="img/dandy/fin1.jpg" alt="윗머리와 옆머리에 제품을 바르는 장면" loading="lazy"></div><div><img src="img/dandy/fin2.jpg" alt="윗머리를 뒤로 살짝 쓸어 모양을 잡는 장면" loading="lazy"></div></div>
+  <p class="desc">컬크림이나 오일, <strong>앞머리는 빼고</strong> 바르기</p>
+</section>
+
+<section class="card" data-style="dandy" data-ch="fix">
+  <h2>잘 안 될 때</h2>
+  <div class="rows">
+    <div><b>뒷머리가 뭉친다</b><span>틴닝이나 슬라이싱으로 풀기</span></div>
+    <div><b>한쪽 앞머리가 퍼진다</b><span>롤빗으로 뿌리를 가운데로 밀기</span></div>
+    <div><b>옆이 뜬다</b><span>다운펌</span></div>
+    <div><b>앞머리 볼륨이 없다</b><span>아이롱펌</span></div>
+  </div>
+  <span></span>
+</section>
+
+<section class="card" data-style="dandy" data-ch="end">
+  <h2>완성</h2>
+  <div class="media"><div><img src="img/dandy/end.jpg" alt="시스루 댄디컷 완성 마네킹" loading="lazy"></div></div>
+  <div style="display:grid;gap:8px;width:100%"><p class="desc">가운데는 자연스럽게, <strong>양옆은 바깥쪽으로</strong></p><p class="credit">사진: 유튜브 그로잉살롱, 로아티, 맨드살롱TV 영상 캡처</p></div>
+</section>
+
+<!-- 허쉬컷 -->
+<section class="card cover" data-style="hush" data-ch="start">
+  <h1>허쉬컷</h1>
+  <div class="media"><div><img src="img/hush/hero.jpg" alt="허쉬컷 완성 옆모습" loading="lazy"></div></div>
+  <p class="desc">기장은 두고 <strong>층만 위로</strong> 올립니다</p>
+</section>
+<section class="card" data-style="hush" data-ch="key">
+  <h2>층은 높게, 기장은 그대로</h2>
+  <div class="media"><div><img src="img/hush/key1.jpg" alt="위는 층이 높고 아래는 길이가 유지된 모습" loading="lazy"></div></div>
+  <p class="desc">위 층은 짧게, <strong>아래 기장은 유지</strong></p>
+</section>
+<section class="card" data-style="hush" data-ch="key">
+  <h2>얼굴 옆에 볼륨</h2>
+  <div class="media"><div><img src="img/hush/key2.jpg" alt="얼굴 주변을 감싸는 앞쪽 층" loading="lazy"></div></div>
+  <p class="desc">앞쪽 층이 <strong>얼굴을 감쌉니다</strong></p>
+</section>
+<section class="card" data-style="hush" data-ch="key">
+  <h2>끝은 가볍게 빠진다</h2>
+  <div class="media"><div><img src="img/hush/key3.jpg" alt="뒷머리 끝이 가볍게 빠진 모습" loading="lazy"></div></div>
+  <p class="desc">안쪽 숱을 덜어 <strong>끝이 가볍게</strong></p>
+</section>
+<section class="card" data-style="hush" data-ch="len">
+  <h2>길이와 각도</h2>
+  <div class="rows"><div><b>기장</b><span>원랭스, 일자로 조금만 제거</span></div><div><b>앞쪽 층 높이</b><span>턱선 조금 아래</span></div><div><b>층 낼 때 손 각도</b><span>위가 짧아지는 45도</span></div><div><b>틴닝 숱치기</b><span>20% 정도 빠지는 틴</span></div></div>
+  <span></span>
+</section>
+<section class="card" data-style="hush" data-ch="cut">
+  <h2>기장은 일자로</h2>
+  <div class="media"><div><img src="img/hush/cut1.jpg" alt="뒷머리를 일자로 자르는 장면" loading="lazy"></div></div>
+  <p class="desc">뒤는 <strong>일자로</strong>, 너무 많이 자르지 않기</p>
+</section>
+<section class="card" data-style="hush" data-ch="cut">
+  <h2>사이드도 일자로</h2>
+  <div class="media"><div><img src="img/hush/cut2.jpg" alt="옆머리를 일자로 자르는 장면" loading="lazy"></div></div>
+  <p class="desc">앞쪽이 <strong>뾰족해지는</strong> 스퀘어 라인</p>
+</section>
+<section class="card" data-style="hush" data-ch="cut">
+  <h2>앞쪽 층부터 나누기</h2>
+  <div class="media"><div><img src="img/hush/cut3.jpg" alt="앞쪽 머리를 나누는 장면" loading="lazy"></div></div>
+  <p class="desc">귀 뒤에서 나눠 <strong>앞머리 쪽 먼저</strong></p>
+</section>
+<section class="card" data-style="hush" data-ch="cut">
+  <h2>앞으로 뽑아 45도</h2>
+  <div class="media"><div><img src="img/hush/cut4.jpg" alt="앞머리를 앞으로 뽑아 45도로 자르는 장면" loading="lazy"></div></div>
+  <p class="desc">층 높이는 <strong>턱선 조금 아래</strong></p>
+</section>
+<section class="card" data-style="hush" data-ch="cut">
+  <h2>뒤는 가져와서 연결</h2>
+  <div class="media"><div><img src="img/hush/cut5.jpg" alt="뒷머리를 위로 가져와 자르는 장면" loading="lazy"></div></div>
+  <p class="desc">앞 층 높이에 맞춰 <strong>가져올 수 있는 만큼</strong></p>
+</section>
+<section class="card" data-style="hush" data-ch="cut">
+  <h2>틴닝은 두 번만</h2>
+  <div class="media"><div><img src="img/hush/cut6.jpg" alt="사이드를 반으로 나눠 틴닝하는 장면" loading="lazy"></div></div>
+  <p class="desc">사이드는 세로로 반 나눠 <strong>두 섹션</strong></p>
+</section>
+<section class="card" data-style="hush" data-ch="cut">
+  <h2>모선 안쪽부터 치기</h2>
+  <div class="media"><div><img src="img/hush/cut7.jpg" alt="모발 안쪽부터 틴닝하는 장면" loading="lazy"></div></div>
+  <p class="desc"><strong>안쪽부터</strong> 치면 하늘하늘해집니다</p>
+</section>
+<section class="card" data-style="hush" data-ch="cut">
+  <h2>언더는 위로 들어서</h2>
+  <div class="media"><div><img src="img/hush/cut8.jpg" alt="언더 머리를 위로 들어 질감을 넣는 장면" loading="lazy"></div></div>
+  <p class="desc">머리를 <strong>다 위로 들어</strong> 질감 빼기</p>
+</section>
+<section class="card" data-style="hush" data-ch="perm">
+  <h2>펌은 약하게</h2>
+  <div class="rows"><div><b>컬</b><span>C컬로 자연스럽게만</span></div><div><b>컬을 강하게 넣으면</b><span>층이 뭉쳐 어색해집니다</span></div></div>
+  <span></span>
+</section>
+<section class="card" data-style="hush" data-ch="dry">
+  <h2>무심하게 툭툭</h2>
+  <div class="media"><div><img src="img/hush/dry1.jpg" alt="롤브러시로 가볍게 말리는 장면" loading="lazy"></div></div>
+  <p class="desc">C컬로 <strong>강하지 않게</strong> 말립니다</p>
+</section>
+<section class="card" data-style="hush" data-ch="dry">
+  <h2>앞머리는 뿌리부터</h2>
+  <div class="media"><div><img src="img/hush/dry2.jpg" alt="앞머리 뿌리에 드라이기를 대는 장면" loading="lazy"></div></div>
+  <p class="desc">뿌리를 잡아 <strong>들리게</strong>, 끝은 C컬로</p>
+</section>
+<section class="card" data-style="hush" data-ch="dry">
+  <h2>자른 각도로 들어서</h2>
+  <div class="media"><div><img src="img/hush/dry3.jpg" alt="자른 각도에 맞춰 들어 말리는 장면" loading="lazy"></div></div>
+  <p class="desc">자른 각도로 들면 <strong>끝선이 맞습니다</strong></p>
+</section>
+<section class="card" data-style="hush" data-ch="iron">
+  <h2>160도, 36mm 고데기</h2>
+  <div class="media"><div><img src="img/hush/iron1.jpg" alt="36mm 고데기" loading="lazy"></div></div>
+  <p class="desc">열은 <strong>160도</strong>, 36mm가 무난합니다</p>
+</section>
+<section class="card" data-style="hush" data-ch="iron">
+  <h2>앞머리와 페이스라인</h2>
+  <div class="media"><div><img src="img/hush/iron2.jpg" alt="앞머리와 페이스라인을 고데기로 마는 장면" loading="lazy"></div></div>
+  <p class="desc">페이스라인은 <strong>안쪽으로</strong> 말아 줍니다</p>
+</section>
+<section class="card" data-style="hush" data-ch="iron">
+  <h2>머리는 세 등분</h2>
+  <div class="media"><div><img src="img/hush/iron3.jpg" alt="머리를 세 등분으로 묶은 모습" loading="lazy"></div></div>
+  <p class="desc">위쪽은 묶고 <strong>아래부터</strong> 말기</p>
+</section>
+<section class="card" data-style="hush" data-ch="iron">
+  <h2>한 바퀴 돌려 풀기</h2>
+  <div class="media"><div><img src="img/hush/iron4.jpg" alt="고데기를 한 바퀴 돌려 말아 주는 장면" loading="lazy"></div></div>
+  <p class="desc">잡아서 <strong>한 바퀴</strong>, 위로 올리며 풀기</p>
+</section>
+<section class="card" data-style="hush" data-ch="iron">
+  <h2>윗부분은 뒤로 보내며</h2>
+  <div class="media"><div><img src="img/hush/iron5.jpg" alt="윗머리를 뒤로 보내며 말아 주는 장면" loading="lazy"></div></div>
+  <p class="desc"><strong>뒤로 보내며</strong> 한 바퀴 돌립니다</p>
+</section>
+<section class="card" data-style="hush" data-ch="iron">
+  <h2>페이스라인은 한 번 더</h2>
+  <div class="media"><div><img src="img/hush/iron6.jpg" alt="페이스라인을 한 번 더 말아 주는 장면" loading="lazy"></div></div>
+  <p class="desc">살짝 <strong>오버해서</strong> 말아도 풀립니다</p>
+</section>
+<section class="card" data-style="hush" data-ch="iron">
+  <h2>몇 가닥만 앞으로</h2>
+  <div class="media"><div><img src="img/hush/iron7.jpg" alt="반대편 머리를 살짝 앞으로 가져오는 장면" loading="lazy"></div></div>
+  <p class="desc">반대편 머리를 <strong>살짝</strong> 가져오기</p>
+</section>
+<section class="card" data-style="hush" data-ch="fix">
+  <h2>잘 안 될 때</h2>
+  <div class="rows"><div><b>답답하고 무겁다</b><span>틴으로 안쪽부터 질감 넣기</span></div><div><b>층이 너무 높다</b><span>처음엔 무겁게 내고 질감으로 높이기</span></div><div><b>컬이 부족하다</b><span>부족한 곳만 컬 더 넣기</span></div></div>
+  <span></span>
+</section>
+<section class="card" data-style="hush" data-ch="end">
+  <h2>허쉬컷 완성</h2>
+  <div class="media"><div><img src="img/hush/end.jpg" alt="허쉬컷 완성 옆모습" loading="lazy"></div></div>
+  <div style="display:grid;gap:8px;width:100%"><p class="desc">앞 볼륨이 <strong>후대각</strong>으로 이어집니다</p><p class="credit">사진: 유튜브 미남들, 훠니 Huoney 영상 캡처</p></div>
+</section>
+
+<!-- C컬 단발펌 -->
+<section class="card cover" data-style="bob" data-ch="start">
+  <h2>C컬 단발펌</h2>
+  <div class="media"><div><img src="img/bob/hero.jpg" alt="C컬 단발펌 완성 옆모습" loading="lazy"></div></div>
+  <p class="desc">원랭스 단발에 <strong>끝만 안으로</strong> 말리는 C컬</p>
+</section>
+
+<section class="card" data-style="bob" data-ch="key">
+  <h2>뒤는 일자, 끝은 안으로</h2>
+  <div class="media"><div><img src="img/bob/key1.jpg" alt="뒷모습 일자 라인과 안으로 말린 끝" loading="lazy"></div></div>
+  <p class="desc">뒷머리는 <strong>스퀘어 라인</strong>, 끝은 안쪽으로</p>
+</section>
+<section class="card" data-style="bob" data-ch="key">
+  <h2>옆머리도 같은 방향</h2>
+  <div class="media"><div><img src="img/bob/key2.jpg" alt="옆머리 끝이 안으로 말린 모습" loading="lazy"></div></div>
+  <p class="desc">옆은 펌 뒤 짧아 보이니 <strong>미세하게 길게</strong></p>
+</section>
+
+<section class="card" data-style="bob" data-ch="cut">
+  <h2>뒤는 스퀘어 라인으로</h2>
+  <div class="media"><div><img src="img/bob/cut1.jpg" alt="빗을 가로로 대고 뒷머리를 일자로 자르는 장면" loading="lazy"></div></div>
+  <p class="desc">빗질한 채로 <strong>일자로</strong> 자릅니다</p>
+</section>
+<section class="card" data-style="bob" data-ch="cut">
+  <h2>고개는 숙이지 않기</h2>
+  <div class="media"><div><img src="img/bob/cut2.jpg" alt="고개를 세운 채 뒷머리를 자르는 장면" loading="lazy"></div></div>
+  <p class="desc">많이 숙이면 <strong>가운데가 길어집니다</strong></p>
+</section>
+<section class="card" data-style="bob" data-ch="cut">
+  <h2>옆은 뒤로 살짝 당겨서</h2>
+  <div class="media"><div><img src="img/bob/cut3.jpg" alt="옆머리를 가운데 쪽으로 당겨 자르는 장면" loading="lazy"></div></div>
+  <p class="desc">백사이드는 <strong>오버다이렉션</strong>으로 끌어옵니다</p>
+</section>
+<section class="card" data-style="bob" data-ch="cut">
+  <h2>옆을 자를 땐 고개 옆으로</h2>
+  <div class="media"><div><img src="img/bob/cut4.jpg" alt="고개를 옆으로 기울여 사이드를 자르는 장면" loading="lazy"></div></div>
+  <p class="desc">최소 <strong>15도 이상</strong> 숙여 손가락 한 층 공간 확보</p>
+</section>
+<section class="card" data-style="bob" data-ch="cut">
+  <h2>길게 잘라 두기</h2>
+  <div class="media"><div><img src="img/bob/cut5.jpg" alt="옆머리를 길게 남기고 자르는 장면" loading="lazy"></div></div>
+  <p class="desc">짧게 자르기보다 <strong>길게</strong>, 펌 뒤에 대응합니다</p>
+</section>
+<section class="card" data-style="bob" data-ch="cut">
+  <h2>목덜미 덜 잘린 곳</h2>
+  <div class="media"><div><img src="img/bob/cut6.jpg" alt="목덜미 아래 섹션을 나눠 다시 자르는 장면" loading="lazy"></div></div>
+  <p class="desc">백포인트 아래로 <strong>섹션을 나눠</strong> 한 번 더</p>
+</section>
+<section class="card" data-style="bob" data-ch="cut">
+  <h2>0도로 낮춰 마무리</h2>
+  <div class="media"><div><img src="img/bob/cut8.jpg" alt="각도를 낮춰 옆 아래를 다듬는 장면" loading="lazy"></div></div>
+  <p class="desc">살짝 뜬 층은 <strong>0도로 낮춰서</strong> 자릅니다</p>
+</section>
+<section class="card" data-style="bob" data-ch="cut">
+  <h2>오른쪽은 반대 방향으로</h2>
+  <div class="media"><div><img src="img/bob/cut7.jpg" alt="오른쪽 머리를 왼쪽에서 오른쪽으로 자르는 장면" loading="lazy"></div></div>
+  <p class="desc">오른손잡이는 <strong>왼쪽에서 오른쪽</strong>으로 자릅니다</p>
+</section>
+
+<section class="card" data-style="bob" data-ch="perm">
+  <h2>사이드는 25mm 롯드</h2>
+  <div class="media"><div><img src="img/bob/perm1.jpg" alt="옆머리에 세팅 롯드를 와인딩하는 장면" loading="lazy"></div></div>
+  <p class="desc">세팅 대롯드로 <strong>한 바퀴 반</strong> 와인딩합니다</p>
+</section>
+<section class="card" data-style="bob" data-ch="perm">
+  <h2>짧은 목덜미는 집게 먼저</h2>
+  <div class="media"><div><img src="img/bob/perm2.jpg" alt="와인딩 뒤 집게를 먼저 꽂는 장면" loading="lazy"></div></div>
+  <p class="desc">와인딩, <strong>집게</strong>, 부직포 순서면 안 빠집니다</p>
+</section>
+<section class="card" data-style="bob" data-ch="perm">
+  <h2>펌 레시피 예시</h2>
+  <div class="rows">
+    <div><b>전처리</b><span>케라틴 원액, 열처리 10분</span></div>
+    <div><b>약처리</b><span>산성 펌제, 자연방치 10분</span></div>
+    <div><b>와인딩 후</b><span>방치 5분</span><small>보통 3~6분 안에 나옵니다</small></div>
+  </div>
+  <span></span>
+</section>
+<section class="card" data-style="bob" data-ch="perm">
+  <h2>다 마를 때쯤 사이드 돌리기</h2>
+  <div class="media"><div><img src="img/bob/perm3.jpg" alt="거의 마른 옆머리를 돌려 건조하는 장면" loading="lazy"></div></div>
+  <p class="desc">거의 말랐을 때 <strong>세 바퀴</strong> 돌려 두고 말립니다</p>
+</section>
+
+<section class="card" data-style="bob" data-ch="dry">
+  <h2>노즐은 가로로 돌리기</h2>
+  <div class="media"><div><img src="img/bob/dry1.jpg" alt="드라이기 노즐을 가로 방향으로 돌린 모습" loading="lazy"></div></div>
+  <p class="desc">브러시와 <strong>같은 방향</strong>이면 열이 고르게 갑니다</p>
+</section>
+<section class="card" data-style="bob" data-ch="dry">
+  <h2>먼저 끝까지 열 주기</h2>
+  <div class="media"><div><img src="img/bob/dry2.jpg" alt="브러시로 머리 전체에 열을 주는 장면" loading="lazy"></div></div>
+  <p class="desc">뿌리부터 끝까지 한 번 <strong>쭉 열감</strong>을 줍니다</p>
+</section>
+<section class="card" data-style="bob" data-ch="dry">
+  <h2>끝 15~20cm에서 돌돌</h2>
+  <div class="media"><div><img src="img/bob/dry3.jpg" alt="중간부터 끝까지 손을 굴리며 열을 주는 장면" loading="lazy"></div></div>
+  <p class="desc">남은 길이에서 <strong>손을 돌돌</strong> 꺾어 말기</p>
+</section>
+<section class="card" data-style="bob" data-ch="dry">
+  <h2>끝은 안으로 말고 5초</h2>
+  <div class="media"><div><img src="img/bob/dry4.jpg" alt="끝부분을 안으로 말아 열을 주는 장면" loading="lazy"></div></div>
+  <p class="desc">안으로 말아 <strong>5초</strong> 열, 위로 당기며 뺍니다</p>
+</section>
+<section class="card" data-style="bob" data-ch="dry">
+  <h2>처음엔 약한 바람</h2>
+  <div class="media"><div><img src="img/bob/dry5.jpg" alt="드라이기를 약한 바람으로 두는 장면" loading="lazy"></div></div>
+  <p class="desc">안 먹으면 <strong>같은 동작을 반복</strong>합니다</p>
+</section>
+<section class="card" data-style="bob" data-ch="dry">
+  <h2>앞머리는 곡선으로</h2>
+  <div class="media"><div><img src="img/bob/dry6.jpg" alt="앞머리를 앞으로 뺀 뒤 곡선을 만드는 장면" loading="lazy"></div></div>
+  <p class="desc">앞으로 뺐다가 <strong>뒤 대각선</strong>으로 빼냅니다</p>
+</section>
+<section class="card" data-style="bob" data-ch="dry">
+  <h2>귀 넘길 때 곡선 잡기</h2>
+  <div class="media"><div><img src="img/bob/dry7.jpg" alt="귀 쪽으로 넘긴 머리의 곡선" loading="lazy"></div></div>
+  <p class="desc">이렇게 말리면 귀에 걸 때 <strong>곡선이 예쁩니다</strong></p>
+</section>
+
+<section class="card" data-style="bob" data-ch="roll">
+  <h2>롤은 중간 크기</h2>
+  <div class="media"><div><img src="img/bob/roll1.jpg" alt="중간 크기 롤 브러시를 보여 주는 장면" loading="lazy"></div></div>
+  <p class="desc">뿌리 볼륨·앞·뒤에 두루 쓰는 <strong>중간 크기</strong></p>
+</section>
+<section class="card" data-style="bob" data-ch="roll">
+  <h2>손으로 롤에 말아 열</h2>
+  <div class="media"><div><img src="img/bob/roll2.jpg" alt="머리를 손으로 롤에 말아 열을 주는 장면" loading="lazy"></div></div>
+  <p class="desc">브러시가 어려우면 <strong>손으로 말아</strong> 열 줍니다</p>
+</section>
+<section class="card" data-style="bob" data-ch="roll">
+  <h2>뿌리 볼륨은 귀 위부터</h2>
+  <div class="media"><div><img src="img/bob/roll3.jpg" alt="귀 위쪽 머리를 들어 뿌리에 열을 주는 장면" loading="lazy"></div></div>
+  <p class="desc">귀에서 <strong>5cm 위</strong>부터 뿌리를 살립니다</p>
+</section>
+
+<section class="card" data-style="bob" data-ch="fix">
+  <h2>잘 안 될 때</h2>
+  <div class="rows">
+    <div><b>목덜미 롯드가 빠진다</b><span>와인딩 뒤 집게부터 꽂기</span></div>
+    <div><b>옆이 짧아 보인다</b><span>커트 때 옆을 길게 남기기</span></div>
+    <div><b>C컬이 잘 안 먹는다</b><span>약한 바람으로 말기를 반복</span></div>
+  </div>
+  <span></span>
+</section>
+
+<section class="card" data-style="bob" data-ch="end">
+  <h2>완성</h2>
+  <div class="media"><div><img src="img/bob/end.jpg" alt="C컬 단발펌 완성 정면" loading="lazy"></div></div>
+  <div style="display:grid;gap:8px;width:100%"><p class="desc">처음엔 밖으로, <strong>한 달 뒤엔 안으로</strong> 말려도 됩니다</p><p class="credit">사진: 유튜브 아는원장의 쉬운 커트, 하이예나 영상 캡처</p></div>
+</section>
+<!-- STYLES:END -->
 
 </main>
 
@@ -353,29 +1180,59 @@ h2,h1{font-family:var(--display);font-weight:500;font-size:var(--t-title);line-h
 
 <script>
 (function(){
-  var CH=[
-    {id:'start',name:'처음'},{id:'key',name:'핵심'},{id:'len',name:'길이'},{id:'cut',name:'커트',seq:1},
-    {id:'perm',name:'펌'},{id:'dry',name:'드라이',seq:1},{id:'roll',name:'롤빗',seq:1},{id:'fin',name:'마무리',seq:1},
-    {id:'fix',name:'잘 안 될 때'},{id:'end',name:'완성'}];
-  var byId={};CH.forEach(function(c){byId[c.id]=c});
+  // 스타일(큰 목록)과 단원(작은 목록). 카드는 data-style + data-ch 로 이어진다.
+  var STYLES=[
+    {id:'leaf',name:'리프컷',group:'남자',chapters:[
+      {id:'start',name:'처음'},{id:'key',name:'핵심'},{id:'len',name:'길이'},{id:'cut',name:'커트',seq:1},
+      {id:'perm',name:'펌'},{id:'dry',name:'드라이',seq:1},{id:'roll',name:'롤빗',seq:1},{id:'fin',name:'마무리',seq:1},
+      {id:'fix',name:'잘 안 될 때'},{id:'end',name:'완성'}]},
+    {"id": "gail", "name": "가일컷", "group": "남자", "chapters": [{"id": "start", "name": "처음"}, {"id": "key", "name": "핵심"}, {"id": "len", "name": "길이"}, {"id": "cut", "name": "커트", "seq": 1}, {"id": "perm", "name": "펌"}, {"id": "dry", "name": "드라이", "seq": 1}, {"id": "fin", "name": "마무리", "seq": 1}, {"id": "fix", "name": "잘 안 될 때"}, {"id": "end", "name": "완성"}]},
+    {"id": "drop", "name": "드롭컷", "group": "남자", "chapters": [{"id": "start", "name": "처음"}, {"id": "key", "name": "핵심"}, {"id": "len", "name": "길이"}, {"id": "cut", "name": "커트", "seq": 1}, {"id": "dry", "name": "드라이", "seq": 1}, {"id": "roll", "name": "롤빗", "seq": 1}, {"id": "fin", "name": "마무리", "seq": 1}, {"id": "fix", "name": "잘 안 될 때"}, {"id": "end", "name": "완성"}]},
+    {"id": "ase", "name": "애즈펌", "group": "남자", "chapters": [{"id": "start", "name": "처음"}, {"id": "key", "name": "핵심"}, {"id": "len", "name": "길이"}, {"id": "cut", "name": "커트", "seq": 1}, {"id": "down", "name": "다운펌", "seq": 1}, {"id": "perm", "name": "펌", "seq": 1}, {"id": "iron", "name": "아이롱", "seq": 1}, {"id": "dry", "name": "드라이", "seq": 1}, {"id": "end", "name": "완성"}]},
+    {"id": "dandy", "name": "시스루 댄디컷", "group": "남자", "chapters": [{"id": "start", "name": "처음"}, {"id": "key", "name": "핵심"}, {"id": "len", "name": "길이"}, {"id": "cut", "name": "커트", "seq": 1}, {"id": "perm", "name": "펌", "seq": 1}, {"id": "dry", "name": "드라이", "seq": 1}, {"id": "fin", "name": "마무리"}, {"id": "fix", "name": "잘 안 될 때"}, {"id": "end", "name": "완성"}]},
+    {"id": "hush", "name": "허쉬컷", "group": "여자", "chapters": [{"id": "start", "name": "처음"}, {"id": "key", "name": "핵심"}, {"id": "len", "name": "길이"}, {"id": "cut", "name": "커트", "seq": 1}, {"id": "perm", "name": "펌"}, {"id": "dry", "name": "드라이", "seq": 1}, {"id": "iron", "name": "고데기", "seq": 1}, {"id": "fix", "name": "잘 안 될 때"}, {"id": "end", "name": "완성"}]},
+    {"id": "bob", "name": "C컬 단발펌", "group": "여자", "chapters": [{"id": "start", "name": "처음"}, {"id": "key", "name": "핵심"}, {"id": "cut", "name": "커트", "seq": 1}, {"id": "perm", "name": "펌", "seq": 1}, {"id": "dry", "name": "드라이", "seq": 1}, {"id": "roll", "name": "롤빗", "seq": 1}, {"id": "fix", "name": "잘 안 될 때"}, {"id": "end", "name": "완성"}]}
+    /*STYLES*/
+  ];
+  var sty={},chap={};
+  STYLES.forEach(function(s){sty[s.id]=s;s.chapters.forEach(function(c){chap[s.id+':'+c.id]=c})});
   var deck=document.getElementById('deck'),cards=[].slice.call(deck.querySelectorAll('.card')),n=cards.length;
-  var toc=document.getElementById('toc'),prev=document.getElementById('prev'),next=document.getElementById('next');
+  var toc=document.getElementById('toc'),side=toc.parentNode,prev=document.getElementById('prev'),next=document.getElementById('next');
   var where=document.getElementById('where'),segs=document.getElementById('segs');
   var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var first={},total={},btns={};
-  cards.forEach(function(c,i){var id=c.dataset.ch;if(first[id]==null)first[id]=i;total[id]=(total[id]||0)+1;c.dataset.k=total[id]});
-  CH.forEach(function(ch){
-    if(first[ch.id]==null)return;
-    var li=document.createElement('li'),b=document.createElement('button');b.type='button';
-    b.innerHTML='<span>'+ch.name+'</span>'+(total[ch.id]>1?'<small>'+total[ch.id]+'장</small>':'');
-    b.addEventListener('click',function(){go(first[ch.id])});li.appendChild(b);toc.appendChild(li);btns[ch.id]=b;
+  var first={},total={},sfirst={},btns={},items={};
+  cards.forEach(function(c,i){var s=c.dataset.style,key=s+':'+c.dataset.ch;c.dataset.key=key;
+    if(sfirst[s]==null)sfirst[s]=i;if(first[key]==null)first[key]=i;total[key]=(total[key]||0)+1;c.dataset.k=total[key]});
+  var chev='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>';
+  // 목록 만들기: 남자/여자 묶음 > 스타일 > 단원
+  var groups={},order=[];
+  STYLES.forEach(function(s){if(sfirst[s.id]==null)return;
+    if(!groups[s.group]){var g=document.createElement('div');g.className='grp';
+      g.innerHTML='<p class="grp-label">'+s.group+'</p><ul class="toc"></ul>';toc.appendChild(g);groups[s.group]=g.lastChild;order.push(s.group)}
+    var li=document.createElement('li');li.className='sty';
+    var b=document.createElement('button');b.type='button';b.className='sty-btn';b.setAttribute('aria-expanded','false');
+    b.innerHTML='<span>'+s.name+'</span>'+chev;
+    var wrap=document.createElement('div');wrap.className='sub-wrap';var ul=document.createElement('ul');ul.className='subs';ul.id='subs-'+s.id;
+    b.setAttribute('aria-controls',ul.id);
+    s.chapters.forEach(function(ch){var key=s.id+':'+ch.id;if(first[key]==null||ch.id==='start')return;
+      var sl=document.createElement('li'),sb=document.createElement('button');sb.type='button';
+      sb.innerHTML='<span>'+ch.name+'</span>'+(total[key]>1?'<small>'+total[key]+'장</small>':'');
+      sb.addEventListener('click',function(){go(first[key])});sl.appendChild(sb);ul.appendChild(sl);btns[key]=sb});
+    wrap.appendChild(ul);li.appendChild(b);li.appendChild(wrap);groups[s.group].appendChild(li);items[s.id]=li;
+    // 큰 목록을 누르면: 닫혀 있으면 펼치고 그 스타일 첫 장으로, 지금 보는 스타일이 펼쳐져 있으면 접기
+    b.addEventListener('click',function(){
+      if(li.classList.contains('open')&&curStyle===s.id)open(null);
+      else{open(s.id);if(curStyle!==s.id)go(sfirst[s.id])}});
   });
+  if(order.length<2)[].forEach.call(toc.querySelectorAll('.grp-label'),function(p){p.remove()});
+  function open(id){Object.keys(items).forEach(function(x){var on=x===id;items[x].classList.toggle('open',on);
+    items[x].firstChild.setAttribute('aria-expanded',on?'true':'false')})}
   document.getElementById('home').addEventListener('click',function(){go(0)});
   // 순서가 있는 단원은 제목 앞에 큰 번호
   cards.forEach(function(c){
-    var ch=byId[c.dataset.ch],h2=c.querySelector('h2');if(!h2)return;
+    var ch=chap[c.dataset.key]||{},h2=c.querySelector('h2');if(!h2)return;
     var row=document.createElement('div');row.className='title';
-    if(ch.seq&&total[ch.id]>1){var nm=document.createElement('span');nm.className='num';nm.textContent=c.dataset.k;nm.setAttribute('aria-hidden','true');row.appendChild(nm)}
+    if(ch.seq&&total[c.dataset.key]>1){var nm=document.createElement('span');nm.className='num';nm.textContent=c.dataset.k;nm.setAttribute('aria-hidden','true');row.appendChild(nm)}
     c.replaceChild(row,h2);row.appendChild(h2);
   });
   // 설명은 늘 한 줄: 넘치면 글자를 줄인다
@@ -392,16 +1249,21 @@ h2,h1{font-family:var(--display);font-weight:500;font-size:var(--t-title);line-h
     m.style.setProperty('--img-max',Math.max(120,Math.floor(h))+'px')})}
   function cur(){return Math.max(0,Math.min(n-1,Math.round(deck.scrollLeft/deck.clientWidth)||0))}
   function go(i,instant){i=Math.max(0,Math.min(n-1,i));deck.scrollTo({left:i*deck.clientWidth,behavior:(instant||reduce)?'auto':'smooth'})}
-  var keep=-1;
+  var keep=-1,curStyle=null;
   function paint(){var i=cur();if(i===keep)return;keep=i;
-    var c=cards[i],id=c.dataset.ch,k=+c.dataset.k,t=total[id];
-    where.textContent=byId[id].name+(t>1?' '+k+' / '+t:'');
+    var c=cards[i],s=c.dataset.style,key=c.dataset.key,k=+c.dataset.k,t=total[key],ch=chap[key]||{name:''};
+    where.textContent=sty[s].name+(c.dataset.ch==='start'?'':' · '+ch.name+(t>1?' '+k+' / '+t:''));
     var h='';if(t>1)for(var j=1;j<=t;j++)h+='<i'+(j<=k?' class="on"':'')+'></i>';segs.innerHTML=h;
     prev.disabled=i===0;next.disabled=i===n-1;
-    Object.keys(btns).forEach(function(x){btns[x].setAttribute('aria-current',x===id?'true':'false')});
-    // 폰에서는 위쪽 가로 목록이 지금 단원 쪽으로 따라간다
-    var side=toc.parentNode,b=btns[id];if(b&&side.scrollWidth>side.clientWidth){var l=b.offsetLeft-side.clientWidth/2+b.offsetWidth/2;side.scrollTo({left:Math.max(0,l),behavior:reduce?'auto':'smooth'})}
-    try{localStorage.setItem('leaf-card',String(i))}catch(e){}}
+    if(s!==curStyle){curStyle=s;open(s)}
+    Object.keys(btns).forEach(function(x){btns[x].setAttribute('aria-current',x===key?'true':'false')});
+    // 목록이 지금 위치를 따라간다(폰은 가로, 태블릿은 세로)
+    var b=btns[key]||items[s].firstChild;
+    setTimeout(function(){var sr=side.getBoundingClientRect(),br=b.getBoundingClientRect();
+      if(side.scrollWidth>side.clientWidth+1){side.scrollTo({left:Math.max(0,side.scrollLeft+br.left-sr.left-sr.width/2+br.width/2),behavior:reduce?'auto':'smooth'})}
+      else if(side.scrollHeight>side.clientHeight+1&&(br.top<sr.top||br.bottom>sr.bottom)){side.scrollTo({top:Math.max(0,side.scrollTop+br.top-sr.top-sr.height/3),behavior:reduce?'auto':'smooth'})}
+    },240);
+    try{localStorage.setItem('hair-card',key+'#'+k)}catch(e){}}
   prev.addEventListener('click',function(){go(cur()-1)});
   next.addEventListener('click',function(){go(cur()+1)});
   document.addEventListener('keydown',function(e){
@@ -409,7 +1271,9 @@ h2,h1{font-family:var(--display);font-weight:500;font-size:var(--t-title);line-h
     else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(cur()-1)}});
   var t;deck.addEventListener('scroll',function(){clearTimeout(t);t=setTimeout(paint,60)},{passive:true});
   var rt;window.addEventListener('resize',function(){var k=keep;clearTimeout(rt);rt=setTimeout(function(){fit();size();go(k,true);keep=-1;paint()},80)});
-  var start=0;try{start=parseInt(localStorage.getItem('leaf-card')||'0',10)||0}catch(e){}
+  // 마지막에 보던 카드로 (카드가 늘거나 줄어도 같은 단원 같은 장을 찾는다)
+  var start=0;try{var sv=(localStorage.getItem('hair-card')||'').split('#');
+    if(sv[0]&&first[sv[0]]!=null)start=first[sv[0]]+Math.min((+sv[1]||1),total[sv[0]])-1}catch(e){}
   if(start===0&&!reduce){var seen=false;try{seen=sessionStorage.getItem('leaf-enter')==='1';sessionStorage.setItem('leaf-enter','1')}catch(e){}
     if(!seen){document.body.classList.add('enter');setTimeout(function(){document.body.classList.remove('enter')},1600)}}
   fit();size();if(document.fonts&&document.fonts.ready)document.fonts.ready.then(function(){fit();size()});
