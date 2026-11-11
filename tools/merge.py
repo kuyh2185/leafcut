@@ -8,7 +8,7 @@ html, metas = [], []
 for sid in ORDER:
     h, j = root / 'staging' / f'{sid}.html', root / 'staging' / f'{sid}.json'
     if not (h.exists() and j.exists()):
-        print('skip', sid); continue
+        sys.exit(f'staging/{sid}.html·json 이 없음: 합치면 이 스타일이 사라지니 중단. ORDER에서 빼거나 staging을 채운 뒤 다시 실행')
     m = json.loads(j.read_text(encoding='utf-8'))
     frag = h.read_text(encoding='utf-8').strip()
     html.append(f'<!-- {m["name"]} -->\n' + frag)
